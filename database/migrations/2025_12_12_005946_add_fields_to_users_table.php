@@ -27,7 +27,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Menghapus kolom jika migration di-rollback
+          
             $table->dropColumn(['department', 'avatar']);
         });
     }

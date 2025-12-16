@@ -94,7 +94,19 @@
                             <input type="radio" name="category" value="Others" class="form-radio h-4 w-4 text-blue-600 mr-2">
                             <span>Others</span>
                         </label>
-                        
+                        <label class="form-label mb-3">Request Source : <span class="text-red-500">*</span></label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="category" value="Email" class="form-radio h-4 w-4 text-blue-600 mr-2">
+                            <span>Email</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="category" value="By Phone" class="form-radio h-4 w-4 text-blue-600 mr-2">
+                            <span>By Phone</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="category" value="In Person" class="form-radio h-4 w-4 text-blue-600 mr-2">
+                            <span>In Person</span>
+                        </label>
                     </div>
                 </div>
             </div>

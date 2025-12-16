@@ -92,10 +92,12 @@
                                     <option value="">-- Pilih Departemen --</option>
                                     <option value="IT" {{ (old('department', $user->department ?? '') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
                                     <option value="Engineering" {{ (old('department', $user->department ?? '') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
-                                    <option value="HRD" {{ (old('department', $user->department ?? '') == 'HRD') ? 'selected' : '' }}>HRD (Human Resources)</option>
+                                    <option value="HRGA" {{ (old('department', $user->department ?? '') == 'HRGA') ? 'selected' : '' }}>HRGA</option>
                                     <option value="Finance" {{ (old('department', $user->department ?? '') == 'Finance') ? 'selected' : '' }}>Finance</option>
-                                    <option value="GA" {{ (old('department', $user->department ?? '') == 'GA') ? 'selected' : '' }}>General Affair</option>
-                                    <option value="Marketing" {{ (old('department', $user->department ?? '') == 'Marketing') ? 'selected' : '' }}>Marketing</option>
+                                    <option value="Purchasing/Exim" {{ (old('department', $user->department ?? '') == 'Purchasing/Exim') ? 'selected' : '' }}>Purchasing/Exim</option>
+                                    <option value="Sales" {{ (old('department', $user->department ?? '') == 'Sales') ? 'selected' : '' }}>Sales</option>
+                                    <option value="PPIC" {{ (old('department', $user->department ?? '') == 'PPIC') ? 'selected' : '' }}>PPIC</option>
+                                    <option value="QC" {{ (old('department', $user->department ?? '') == 'QC') ? 'selected' : '' }}>QC</option>
                                 </select>
                                 <p class="mt-2 text-xs text-gray-500 flex items-center">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">

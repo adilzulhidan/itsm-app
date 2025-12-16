@@ -89,7 +89,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // --- 1. DONUT CHART (Distribusi Status) ---
+       
         const donutCtx = document.getElementById('donutChart').getContext('2d');
         const donutData = @json($donutData);
         

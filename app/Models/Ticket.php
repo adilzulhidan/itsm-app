@@ -10,13 +10,24 @@ class Ticket extends Model
     use HasFactory;
 
    protected $fillable = [
-        'user_id', 'ticket_code', 'subject', 'department', 'category', 
-        'priority', 'status', 'description', 'attachment',
-        // Tambahkan kolom approval
-        'approved_by_manager_id', 'manager_approved_at',
-        'approved_by_it_id', 'it_approved_at'
-    ];
-
+    'user_id',
+    'ticket_code',
+    'subject',
+    'department',
+    'source', // <--- PASTIKAN INI ADA
+    'category',
+    'priority',
+    'status',
+    'description',
+    'attachment',
+    'approved_by_manager_id',
+    'manager_approved_at',
+    'approved_by_it_id',
+    'it_approved_at',
+    'rejected_by_id',
+    'rejection_reason',
+    'rejected_at'
+];
         public function managerApprover()
     {
         return $this->belongsTo(User::class, 'approved_by_manager_id');

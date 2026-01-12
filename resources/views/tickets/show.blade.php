@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Tiket - {{ $ticket->ticket_code }}</title>
-    <!-- Tambahkan Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Script untuk modal (jika menggunakan Flowbite) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     <style>
         .modal-overlay {
@@ -27,7 +25,7 @@
             max-width: 500px;
             margin: 2rem auto;
         }
-        /* Custom scrollbar untuk komentar */
+        
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
@@ -42,19 +40,19 @@
 </head>
 <body class="bg-gray-100">
 
-    <!-- Header -->
+
     <div class="bg-white shadow-sm py-4 px-6 mb-6">
         <div class="container mx-auto max-w-5xl">
             <a href="{{ route('tickets.index') }}" class="text-blue-600 hover:underline flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Kembali ke Daftar Tiket
+                back
             </a>
         </div>
     </div>
 
-    <!-- Main Content -->
+
     <div class="container mx-auto px-4 max-w-5xl pb-10">
         
-        <!-- Header Tiket -->
+
         <div class="bg-white rounded-t-lg shadow-sm border-b p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">{{ $ticket->subject }}</h1>
@@ -95,7 +93,7 @@
             </div>
         </div>
         
-        <!-- Bagian Aksi Approval -->
+    
         @php
             $user = Auth::user();
         @endphp
@@ -109,7 +107,7 @@
                             Tindakan Diperlukan: Anda dapat menyetujui atau menolak tiket ini.
                         </p>
                         <div class="flex gap-2 flex-wrap">
-                            <!-- Form Approve Manager -->
+                        
                             <form action="{{ route('tickets.manager.approve', $ticket->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menyetujui tiket ini?');">
                                 @csrf
                                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-bold text-sm shadow-md transition flex items-center gap-2">
@@ -117,7 +115,7 @@
                                 </button>
                             </form>
 
-                            <!-- Tombol Reject -->
+                    
                             <button type="button" onclick="openRejectModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-bold text-sm shadow-md transition flex items-center gap-2">
                                 <i class="fas fa-times"></i> Tolak
                             </button>
@@ -134,7 +132,6 @@
                             Tindakan Diperlukan: Persetujuan Akhir dari IT Head.
                         </p>
                         <div class="flex gap-2 flex-wrap">
-                            <!-- Form Approve IT Head -->
                             <form action="{{ route('tickets.ithead.approve', $ticket->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin menyetujui akhir tiket ini? Status akan menjadi In Progress.');">
                                 @csrf
                                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-bold text-sm shadow-md transition flex items-center gap-2">
@@ -142,7 +139,7 @@
                                 </button>
                             </form>
 
-                            <!-- Tombol Reject -->
+                
                             <button type="button" onclick="openRejectModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-bold text-sm shadow-md transition flex items-center gap-2">
                                 <i class="fas fa-times"></i> Tolak
                             </button>
@@ -152,13 +149,13 @@
             @endif
         @endif
 
-        <!-- Grid Konten -->
+      
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Kolom Kiri (2/3) -->
+           
             <div class="lg:col-span-2 space-y-6">
                 
-                <!-- Deskripsi Masalah -->
+                
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b flex items-center gap-2">
                         <i class="fas fa-align-left text-blue-600"></i>
@@ -188,7 +185,7 @@
                     @endif
                 </div>
 
-                <!-- Authorization Table -->
+                
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h3 class="font-bold text-gray-800 mb-4 pb-2 border-b flex items-center gap-2">
                         <i class="fas fa-user-check text-blue-600"></i>
@@ -269,7 +266,7 @@
                     </div>
                 </div>
 
-                <!-- Diskusi / Komentar -->
+                
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="bg-gray-50 px-6 py-4 border-b flex justify-between items-center">
                         <h3 class="font-bold text-gray-800 flex items-center gap-2">
@@ -307,7 +304,7 @@
                         @endforelse
                     </div>
 
-                    <!-- Form Komentar -->
+                    
                     <div class="p-4 bg-gray-50 border-t">
                         <form action="{{ route('comments.store', $ticket->id) }}" method="POST" class="flex gap-2" id="comment-form">
                             @csrf
@@ -322,10 +319,10 @@
 
             </div>
 
-            <!-- Kolom Kanan (1/3) -->
+            
             <div class="lg:col-span-1 space-y-6">
                 
-                <!-- Informasi Request -->
+                
                 <div class="bg-white rounded-lg shadow-sm p-6 border-t-4 border-blue-800">
                     <h3 class="font-bold text-gray-800 mb-4 pb-2 border-b flex items-center gap-2">
                         <i class="fas fa-info-circle text-blue-600"></i>
@@ -383,7 +380,7 @@
                     </div>
                 </div>
 
-                <!-- Tindakan -->
+                
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h3 class="font-bold text-gray-800 mb-4 pb-2 border-b flex items-center gap-2">
                         <i class="fas fa-cog text-blue-600"></i>
@@ -417,7 +414,7 @@
                             </button>
                         </form>
                         
-                        <!-- Tombol untuk assign ke technician (jika ada fitur) -->
+                        
                         @if(in_array($user->role, ['admin', 'it_head']) && $ticket->status == 'In Progress')
                             <button onclick="assignTechnician()" class="block w-full text-center bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 font-bold text-sm transition shadow-sm flex items-center justify-center gap-2">
                                 <i class="fas fa-user-cog"></i>
@@ -432,7 +429,7 @@
         </div>
     </div>
     
-    <!-- Modal Reject (Simple Version) -->
+
     <div id="rejectModal" class="modal-overlay">
         <div class="modal-content">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Alasan Penolakan</h3>
@@ -463,7 +460,7 @@
     </div>
 
     <script>
-        // Fungsi untuk modal reject
+        
         function openRejectModal() {
             document.getElementById('rejectModal').style.display = 'block';
         }
@@ -472,7 +469,7 @@
             document.getElementById('rejectModal').style.display = 'none';
         }
 
-        // Tutup modal jika klik di luar
+    
         window.onclick = function(event) {
             const modal = document.getElementById('rejectModal');
             if (event.target == modal) {
@@ -480,7 +477,7 @@
             }
         }
 
-        // Auto-scroll ke komentar terbaru
+    
         document.addEventListener('DOMContentLoaded', function() {
             const commentSection = document.getElementById('comment-section');
             if (commentSection) {
@@ -488,7 +485,7 @@
             }
         });
 
-        // Form komentar submit
+        
         document.getElementById('comment-form')?.addEventListener('submit', function(e) {
             const input = this.querySelector('input[name="message"]');
             if (input.value.trim() === '') {
@@ -497,7 +494,7 @@
             }
         });
 
-        // Fungsi assign technician (placeholder)
+        
         function assignTechnician() {
             alert('Fitur assign technician akan datang!');
         }

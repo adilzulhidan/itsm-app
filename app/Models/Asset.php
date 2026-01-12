@@ -14,17 +14,36 @@ class Asset extends Model
         'name', 
         'type', 
         'serial_number', 
-        'purchase_date', 
+        'last_inventory_date', 
         'status', 
         'location', 
         'assigned_to'
     ];
 
-    // --- [TAMBAHKAN FUNGSI INI] ---
-    // Fungsi ini memberitahu Laravel bahwa aset ini milik seorang User
+    protected $casts = [
+        'purchase_date' => 'date',
+    ];
+
     public function user()
     {
-        // 'assigned_to' adalah nama kolom foreign key di tabel assets
+
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+   public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, function($query, $search) {
+            return $query->where(function($query) use ($search) {
+                // Kolom yang sudah ada
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('asset_code', 'like', '%' . $search . '%')
+                      ->orWhere('serial_number', 'like', '%' . $search . '%')
+                      
+                      // --- TAMBAHAN BARU (Agar Type & Lokasi bisa dicari) ---
+                      ->orWhere('type', 'like', '%' . $search . '%')
+                      ->orWhere('location', 'like', '%' . $search . '%')
+                      ->orWhere('status', 'like', '%' . $search . '%');
+            });
+        });
     }
 }

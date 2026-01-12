@@ -140,8 +140,8 @@
                                 <span class="font-bold text-black">{{ Auth::user()->name }}</span><br>
                                 <span class="text-xs">(Signed Digitally)</span>
                             </td>
-                            <td class="auth-box">Ofline Approval Need</td>
-                            <td class="auth-box">Ofline Approval Need</td>
+                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
+                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
                         </tr>
                         <tr>
                              <td class="text-xs text-left border-t-0">Date: {{ date('d/m/Y') }}</td>

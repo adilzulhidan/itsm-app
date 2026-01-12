@@ -15,18 +15,19 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             
-            // Kolom Role (Posisi di sini aman)
+            
            $table->enum('role', ['admin', 'user', 'manager', 'it_head'])->default('user');
 
-            // --- BAGIAN INI CUKUP DITULIS SEKALI SAJA DI BAWAH ---
+            
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // ... kode Schema::create('password_reset_tokens' ... biarkan saja
-        // ... kode Schema::create('sessions' ... biarkan saja
         
-        // (Saya persingkat biar fokus ke errornya saja)
+
+
+
+        
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

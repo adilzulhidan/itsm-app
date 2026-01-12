@@ -9,7 +9,7 @@
     <style>
         body {
             height: 100vh;
-            /* Mengganti gradient dengan gambar background */
+            
             background: linear-gradient(120deg, rgba(41, 127, 185, 0), rgba(141, 68, 173, 0.01)), 
                         url('/images/bg-login.JPG') no-repeat center center fixed;
             background-size: cover;
@@ -19,7 +19,7 @@
             position: relative;
         }
         
-        /* Overlay untuk meningkatkan keterbacaan teks */
+    
         body::before {
             content: '';
             position: absolute;
@@ -31,14 +31,14 @@
             z-index: 1;
         }
         
-        /* Pastikan konten di atas overlay */
+
         .container {
             position: relative;
             z-index: 2;
         }
         
         .glass-card {
-            background: #ffffff; /* Menggunakan putih solid */
+            background: #ffffff;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -53,37 +53,37 @@
         }
         .btn-login:hover { transform: scale(1.02); color: white; }
         .login-header {
-            background: #ffffff; /* Menggunakan putih solid */
+            background: #ffffff; 
             padding: 2rem; text-align: center;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        /* Form input styling */
+        
         .form-control {
-            background-color: #ffffff; /* Putih solid untuk input */
+            background-color: #ffffff; 
             border: 1px solid #dee2e6;
         }
         
         .form-control:focus {
-            background-color: #ffffff; /* Tetap putih saat focus */
+            background-color: #ffffff; 
             border-color: #8e44ad;
             box-shadow: 0 0 0 0.25rem rgba(142, 68, 173, 0.25);
         }
         
-        /* Input group styling */
+        
         .input-group-text {
-            background-color: #ffffff; /* Putih solid untuk input group */
+            background-color: #ffffff; 
             border: 1px solid #dee2e6;
             border-left: none;
         }
         
-        /* Footer styling */
+        
         .bg-light {
-            background-color: #ffffff !important; /* Putih solid untuk footer */
+            background-color: #ffffff !important; 
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        /* Fallback jika gambar tidak ditemukan */
+    
         @media (max-width: 768px) {
             body {
                 background: linear-gradient(120deg, #070707ff, #ca0000ff);
@@ -100,9 +100,9 @@
     <div class="row justify-content-center">
         <div class="col-md-5 col-lg-4">
             
-            <div class="glass-card">
+            <div class="transparent glass-card">
                 <div class="login-header">
-                    <!-- Logo JTEKT tanpa lingkaran -->
+
                     <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: auto; height: auto;">
                         <img src="/images/logo-jtekt.png" 
                              alt="Logo JTEKT" 
@@ -178,7 +178,7 @@
         }
     }
     
-    // Fallback jika gambar tidak ditemukan
+
     window.addEventListener('load', function() {
         const bgImage = new Image();
         bgImage.src = '/images/bg-login.JPG';

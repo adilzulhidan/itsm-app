@@ -25,7 +25,9 @@ class DashboardController extends Controller
         $openTickets = Ticket::where('status', 'open')->count();
     
         $progressTickets = Ticket::where('status', 'In Progress')->count(); 
-        $closedTickets = Ticket::whereIn('status', ['resolved', 'closed'])->count();
+        $resolved = Ticket::where('status', 'resolved')->count();
+        $closedTickets = Ticket::where('status', 'closed')->count();
+        $rejected = Ticket::where('status', 'rejected')->count();
         
         $totalUsers = User::count();
         
@@ -81,7 +83,7 @@ class DashboardController extends Controller
         ];
         
         return view('dashboard', compact(
-            'totalTickets', 'openTickets', 'progressTickets', 'closedTickets', 
+            'totalTickets', 'openTickets', 'progressTickets', 'resolved', 'closedTickets', 'rejected', 
             'totalUsers', 'dailyTickets', 'weeklyTickets', 'monthlyTickets',
             'donutData', 'lineChartData'
         ));

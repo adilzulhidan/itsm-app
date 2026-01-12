@@ -14,7 +14,7 @@ class Ticket extends Model
     'ticket_code',
     'subject',
     'department',
-    'source', // <--- PASTIKAN INI ADA
+    'source',
     'category',
     'priority',
     'status',

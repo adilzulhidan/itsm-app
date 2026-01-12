@@ -7,7 +7,7 @@
     <title>IT Request Form - PT. JTEKT INDONESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Style tambahan agar terlihat seperti kertas dokumen */
+        
         body { background-color: #f3f4f6; }
         .document-container {
             background: white;
@@ -75,6 +75,7 @@
                             <option value="Quality">Quality</option>
                             <option value="Purchasing/exim">Purchasing/Exim</option>
                             <option value="Sales">Sales</option>
+                            <option value="IT">IT</option>
                         </select>
                     </div>
                 </div>
@@ -128,8 +129,8 @@
                                 <span class="font-bold text-black">{{ Auth::user()->name }}</span><br>
                                 <span class="text-xs">(Signed Digitally)</span>
                             </td>
-                            <td class="auth-box">Ofline Approval Need</td>
-                            <td class="auth-box">Ofline Approval Need</td>
+                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
+                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
                         </tr>
                         <tr>
                              <td class="text-xs text-left border-t-0">Date: {{ date('d/m/Y') }}</td>

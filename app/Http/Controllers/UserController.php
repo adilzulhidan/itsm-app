@@ -31,7 +31,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
             'role' => 'required',
-            'department' => 'required', // <--- TAMBAHKAN VALIDASI INI
+            'department' => 'required', 
         ]);
 
         User::create([
@@ -39,8 +39,8 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'department' => $request->department, // <--- TAMBAHKAN BARIS INI
-            // 'avatar' => null (jika ada)
+            'department' => $request->department, 
+            
         ]);
 
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
@@ -59,18 +59,18 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role' => 'required',
-            'department' => 'required', // <--- TAMBAHKAN VALIDASI INI
+            'department' => 'required', 
         ]);
 
-        // Siapkan data update
+        
         $data = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'department' => $request->department, // <--- TAMBAHKAN BARIS INI
+            'department' => $request->department, 
         ];
 
-        // Cek jika password diisi (jika kosong, jangan update password)
+        
         if ($request->filled('password')) {
             $request->validate(['password' => 'min:6|confirmed']);
             $data['password'] = Hash::make($request->password);
@@ -92,10 +92,10 @@ class UserController extends Controller
 
     public function show($id)
     {
-        // Cari user berdasarkan ID
+        
         $user = User::findOrFail($id);
         
-        // Tampilkan view detail
+        
         return view('users.show', compact('user'));
     }
 }

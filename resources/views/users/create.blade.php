@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Pengguna Baru')
+@section('title', 'create new user')
 
 @section('content')
     <div class="min-h-screen bg-gray-50 py-8">
@@ -12,9 +12,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
                     </a>
-                    <h1 class="text-3xl font-bold text-gray-900">Tambah Pengguna Baru</h1>
+                    <h1 class="text-3xl font-bold text-gray-900">Add New User</h1>
                 </div>
-                <p class="text-gray-600">Tambahkan pengguna baru ke dalam sistem</p>
+                <p class="text-gray-600">Add User To System</p>
             </div>
 
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
@@ -23,17 +23,17 @@
                         <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
-                        Form Pendaftaran Pengguna Baru
+                        Form New User
                     </h2>
                 </div>
 
                 <form action="{{ route('users.store') }}" method="POST" class="p-8" id="userForm">
                     @csrf
 
-                    <!-- Progress Indicator -->
+                    
                     <div class="mb-8">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-gray-700">Progress Pengisian</span>
+                            <span class="text-sm font-medium text-gray-700">Progress Registration</span>
                             <span class="text-sm font-semibold text-blue-600">0%</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2">
@@ -42,20 +42,20 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <!-- Kolom Kiri -->
+                        
                         <div class="space-y-6">
                             <div class="form-group transition-all duration-200">
                                 <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
-                                    Nama Lengkap
+                                    Full Name
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <input type="text" name="name" value="{{ old('name') }}" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('name') border-red-500 @enderror"
                                     required
-                                    placeholder="Masukkan nama lengkap"
+                                    placeholder="Enter full name"
                                     oninput="updateProgress()">
                                 @error('name')
                                     <p class="mt-2 text-sm text-red-600 flex items-center">
@@ -78,7 +78,7 @@
                                 <input type="email" name="email" value="{{ old('email') }}" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('email') border-red-500 @enderror"
                                     required
-                                    placeholder="contoh@email.com"
+                                    placeholder="example@email.com"
                                     oninput="updateProgress()">
                                 @error('email')
                                     <p class="mt-2 text-sm text-red-600 flex items-center">
@@ -91,21 +91,21 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan -->
+                        
                         <div class="space-y-6">
                             <div class="form-group transition-all duration-200">
                                 <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    Departemen
+                                    Department
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <select name="department" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none bg-white"
                                     required
                                     onchange="updateProgress()">
-                                    <option value="">-- Pilih Departemen --</option>
+                                    <option value="">-- Choice Department --</option>
                                     <option value="IT" {{ (old('department', $user->department ?? '') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
                                     <option value="Engineering" {{ (old('department', $user->department ?? '') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
                                     <option value="HRD" {{ (old('department', $user->department ?? '') == 'HRD/GA') ? 'selected' : '' }}>HRGA</option>
@@ -119,7 +119,7 @@
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                     </svg>
-                                    Wajib diisi agar workflow approval berjalan sesuai departemen
+                                   This field must be filled in so that the approval workflow runs according to the department.
                                 </p>
                             </div>
 
@@ -128,15 +128,15 @@
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                     </svg>
-                                    Role / Peran
+                                    Role
                                     <span class="text-red-500 ml-1">*</span>
                                 </label>
                                 <select name="role" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 appearance-none bg-white @error('role') border-red-500 @enderror"
                                     required
                                     onchange="updateProgress()">
-                                    <option value="">-- Pilih Peran --</option>
-                                    <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User Biasa (Requester)</option>
+                                    <option value="">-- Choice Role --</option>
+                                    <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User (Requester)</option>
                                     <option value="manager" {{ old('role') == 'manager' ? 'selected' : '' }}>Manager (Function Head)</option>
                                     <option value="it_head" {{ old('role') == 'it_head' ? 'selected' : '' }}>IT Dept Head</option>
                                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator (Super User)</option>
@@ -153,13 +153,13 @@
                         </div>
                     </div>
 
-                    <!-- Password Section -->
+                    
                     <div class="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 hover:shadow-md transition-all duration-300">
                         <div class="flex items-center mb-4">
                             <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
-                            <h3 class="font-semibold text-gray-800">Keamanan Akun</h3>
+                            <h3 class="font-semibold text-gray-800">Account Security</h3>
                             <span class="ml-2 px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Wajib</span>
                         </div>
                         
@@ -170,7 +170,7 @@
                                     <input type="password" name="password" id="password"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 @error('password') border-red-500 @enderror"
                                         required
-                                        placeholder="Minimal 8 karakter"
+                                        placeholder="Minimum 8 characters"
                                         oninput="updateProgress(); checkPasswordStrength(this.value)"
                                         pattern=".{8,}">
                                     <button type="button" onclick="togglePassword('password')" 
@@ -184,7 +184,7 @@
                                 <div class="mt-2">
                                     <div id="passwordStrength" class="text-xs hidden">
                                         <div class="flex items-center">
-                                            <span class="mr-2">Kekuatan:</span>
+                                            <span class="mr-2">Power:</span>
                                             <div class="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                                                 <div id="strengthBar" class="h-full transition-all duration-300"></div>
                                             </div>
@@ -198,12 +198,12 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
                                 <div class="relative">
                                     <input type="password" name="password_confirmation" id="password_confirmation"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                                         required
-                                        placeholder="Ulangi password"
+                                        placeholder="confirm password"
                                         oninput="updateProgress()">
                                     <button type="button" onclick="togglePassword('password_confirmation')" 
                                         class="absolute right-3 top-3 text-gray-500 hover:text-gray-700 transition-colors duration-200">
@@ -229,13 +229,13 @@
                                 <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
-                                Minimal 8 karakter
+                                Minimum 8 characters
                             </p>
                             <p class="flex items-center">
                                 <svg class="w-3 h-3 mr-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
-                                Kombinasi huruf dan angka
+                                combination of letters and numbers
                             </p>
                         </div>
                     </div>
@@ -243,11 +243,11 @@
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200">
                         <a href="{{ route('users.index') }}" 
-                           class="flex items-center px-6 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-all duration-200 mb-4 sm:mb-0">
+                           class="flex items-center px-6 py-3 text-gray-700 hover:text-gray-900 hover:bg-red-500 rounded-xl transition-all duration-200 mb-4 sm:mb-0">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
-                            Batal
+                            Cancel
                         </a>
                         
                         <div class="flex items-center space-x-4">

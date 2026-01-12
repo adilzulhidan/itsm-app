@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
     <div class="max-w-6xl mx-auto">
-        <!-- Header -->
+        
         <div class="mb-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -21,10 +21,10 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Profile Card -->
+        
             <div class="lg:w-2/5">
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
-                    <!-- Profile Header -->
+                    
                     <div class="relative h-32 bg-gradient-to-r from-blue-500 to-purple-600">
                         <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
                             <div class="relative">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <!-- Profile Info -->
+                    
                     <div class="pt-20 px-8 pb-8">
                         <div class="text-center mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h2>
@@ -59,13 +59,13 @@
                             </div>
                         </div>
 
-                        <!-- Stats -->
+                    
                         <div class="grid grid-cols-2 gap-4 mb-8">
                             <div class="bg-gray-50 rounded-xl p-4 text-center hover:bg-gray-100 transition-colors duration-200">
                                 <div class="text-2xl font-bold text-gray-900">
                                     {{ $user->created_at->format('d') }}
                                 </div>
-                                <div class="text-sm text-gray-600">Bergabung</div>
+                                <div class="text-sm text-gray-600">Join</div>
                                 <div class="text-xs text-gray-500 mt-1">{{ $user->created_at->format('M Y') }}</div>
                             </div>
                             <div class="bg-green-50 rounded-xl p-4 text-center hover:bg-green-100 transition-colors duration-200">
@@ -75,23 +75,23 @@
                                     </svg>
                                 </div>
                                 <div class="text-sm font-semibold text-green-800 mt-1">Status</div>
-                                <div class="text-xs text-green-600">Aktif</div>
+                                <div class="text-xs text-green-600">Active</div>
                             </div>
                         </div>
 
-                        <!-- Edit Button -->
+                        
                         <a href="{{ route('users.edit', $user->id) }}" 
                            class="group w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 transform hover:-translate-y-0.5">
                             <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
-                            Edit Data Pengguna
+                            Edit USer Data
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Detail Information -->
+            
             <div class="lg:w-3/5">
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
                     <div class="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
@@ -99,12 +99,12 @@
                             <svg class="w-6 h-6 mr-2 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
-                            Informasi Detail
+                            Detail Information
                         </h2>
                     </div>
 
                     <div class="p-8">
-                        <!-- Detail Items -->
+                        
                         <div class="space-y-6">
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200 group">
                                 <div class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-lg mr-4 group-hover:scale-110 transition-transform duration-200">
@@ -113,7 +113,7 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="text-sm text-gray-500">Departemen</div>
+                                    <div class="text-sm text-gray-500">Department</div>
                                     <div class="font-semibold text-gray-900">{{ $user->department ?? 'Belum diatur' }}</div>
                                 </div>
                                 @if($user->department)
@@ -130,7 +130,7 @@
                                     </svg>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="text-sm text-gray-500">Bergabung Sejak</div>
+                                    <div class="text-sm text-gray-500">Join Since</div>
                                     <div class="font-semibold text-gray-900">{{ $user->created_at->format('d F Y') }}</div>
                                 </div>
                                 <div class="text-sm text-gray-500">{{ $user->created_at->diffForHumans() }}</div>
@@ -146,14 +146,14 @@
                                     <div class="text-sm text-gray-500">Status Akun</div>
                                     <div class="font-semibold text-green-700 flex items-center">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                        Aktif
+                                        Active
                                     </div>
                                 </div>
                                 <div class="text-xs text-green-600 bg-green-50 px-3 py-1 rounded-full">Verified</div>
                             </div>
                         </div>
 
-                        <!-- Role Description -->
+                        
                         <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
                             <h3 class="font-bold text-gray-800 mb-3 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">

@@ -6,13 +6,13 @@
         body { font-family: sans-serif; font-size: 11pt; padding: 20px; }
         .document-container { border: 1px solid black; padding: 20px; }
         
-        /* Kop Surat */
+        
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; border-bottom: 2px solid black; }
         .header-table td { border: none; vertical-align: top; padding-bottom: 5px; }
         .header-table .title { font-size: 18pt; font-weight: bold; text-decoration: underline; }
         .data-box { border: 1px solid black; padding: 8px; margin-bottom: 15px; }
         
-        /* Tabel Approval */
+        
         .auth-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
         .auth-table th, .auth-table td { border: 1px solid black; padding: 10px 5px; text-align: center; height: 70px; }
         .auth-table th { background-color: #f0f0f0; }

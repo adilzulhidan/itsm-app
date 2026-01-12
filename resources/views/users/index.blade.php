@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola Pengguna Sistem')
+@section('title', 'User Management')
 
 @section('content')
 
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Daftar Pengguna Sistem</h1>
+        <h1 class="text-3xl font-bold text-gray-800">System User List</h1>
         <a href="{{ route('users.create') }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            + Tambah User Baru
+            + create new user
         </a>
     </div>
 
@@ -27,10 +27,10 @@
             <thead>
                 <tr class="bg-gray-100 text-gray-700 uppercase text-sm leading-normal">
                     <th class="py-3 px-6">ID</th>
-                    <th class="py-3 px-6">Nama Pengguna</th>
+                    <th class="py-3 px-6">Username</th>
                     <th class="py-3 px-6">Email</th>
-                    <th class="py-3 px-6">Role / Peran</th>
-                    <th class="py-3 px-6 text-center">Aksi</th>
+                    <th class="py-3 px-6">Role</th>
+                    <th class="py-3 px-6 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm">
@@ -57,7 +57,7 @@
     <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
         @csrf
         @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
     </form>
     
 </td>

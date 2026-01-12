@@ -5,21 +5,21 @@
     <style>
         body { font-family: sans-serif; font-size: 11px; }
         
-        /* Tabel Header (Kop Surat) */
+        
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; border-bottom: 3px double black; }
         .header-table td { border: none; vertical-align: middle; padding-bottom: 10px; }
         
-        /* Tabel Data Utama */
+        
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .data-table th, .data-table td { border: 1px solid #000; padding: 6px; text-align: left; }
         .data-table th { background-color: #f0f0f0; text-align: center; font-weight: bold; }
         
-        /* Status Color */
+        
         .status-open { color: green; font-weight: bold; }
         .status-closed { color: red; font-weight: bold; }
         .status-progress { color: #d97706; font-weight: bold; } /* Orange */
         
-        /* Zebra Striping */
+        
         .data-table tr:nth-child(even) { background-color: #f9f9f9; }
     </style>
 </head>

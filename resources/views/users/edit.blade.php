@@ -12,9 +12,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                         </svg>
                     </a>
-                    <h1 class="text-3xl font-bold text-gray-900">Edit Pengguna</h1>
+                    <h1 class="text-3xl font-bold text-gray-900">Edit User</h1>
                 </div>
-                <p class="text-gray-600">Mengubah data untuk: <span class="font-semibold text-gray-800">{{ $user->name }}</span></p>
+                
             </div>
 
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
@@ -23,7 +23,7 @@
                         <svg class="w-6 h-6 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
-                        Form Edit Pengguna
+                        Form User Edit
                     </h2>
                 </div>
 
@@ -32,14 +32,14 @@
                     @method('PUT')
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <!-- Kolom Kiri -->
+                        
                         <div class="space-y-6">
                             <div class="form-group transition-all duration-200">
                                 <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                     </svg>
-                                    Nama Lengkap
+                                    Full Name
                                 </label>
                                 <input type="text" name="name" value="{{ old('name', $user->name) }}" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 @error('name') border-red-500 @enderror"
@@ -77,23 +77,23 @@
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan -->
+                        
                         <div class="space-y-6">
                             <div class="form-group transition-all duration-200">
                                 <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    Departemen
+                                    Departement
                                 </label>
                                 <select name="department" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 appearance-none bg-white"
                                     required>
-                                    <option value="">-- Pilih Departemen --</option>
+                                    <option value="">-- Choice Departemen --</option>
                                     <option value="IT" {{ (old('department', $user->department ?? '') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
                                     <option value="Engineering" {{ (old('department', $user->department ?? '') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
                                     <option value="HRGA" {{ (old('department', $user->department ?? '') == 'HRGA') ? 'selected' : '' }}>HRGA</option>
-                                    <option value="Finance" {{ (old('department', $user->department ?? '') == 'Finance') ? 'selected' : '' }}>Finance</option>
+                                    <option value="Finance" {{ (old('department', $user->department ?? '') == 'Finance & Accounting') ? 'selected' : '' }}>Finance & Accounting</option>
                                     <option value="Purchasing/Exim" {{ (old('department', $user->department ?? '') == 'Purchasing/Exim') ? 'selected' : '' }}>Purchasing/Exim</option>
                                     <option value="Sales" {{ (old('department', $user->department ?? '') == 'Sales') ? 'selected' : '' }}>Sales</option>
                                     <option value="PPIC" {{ (old('department', $user->department ?? '') == 'PPIC') ? 'selected' : '' }}>PPIC</option>
@@ -103,7 +103,7 @@
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                     </svg>
-                                    Wajib diisi agar workflow approval berjalan sesuai departemen
+                                   This field must be filled in so that the approval workflow runs according to the department.
                                 </p>
                             </div>
 
@@ -112,7 +112,7 @@
                                     <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                     </svg>
-                                    Role / Peran
+                                    Role
                                 </label>
                                 <select name="role" 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 appearance-none bg-white @error('role') border-red-500 @enderror"
@@ -134,24 +134,24 @@
                         </div>
                     </div>
 
-                    <!-- Password Section -->
+                    
                     <div class="mb-8 p-6 bg-blue-50 rounded-2xl border border-blue-100 transition-all duration-200 hover:bg-blue-100/50">
                         <div class="flex items-center mb-4">
                             <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
-                            <h3 class="font-semibold text-gray-800">Perubahan Password</h3>
+                            <h3 class="font-semibold text-gray-800">change Password</h3>
                             <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Opsional</span>
                         </div>
-                        <p class="text-sm text-gray-600 mb-6">Kosongkan kolom password jika tidak ingin mengubah password.</p>
+                        <p class="text-sm text-gray-600 mb-6">leave the column blank if you don't want to change</p>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="form-group">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                                 <div class="relative">
                                     <input type="password" name="password" id="password"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 @error('password') border-red-500 @enderror"
-                                        placeholder="Masukkan password baru">
+                                        placeholder="enter new password">
                                     <button type="button" onclick="togglePassword('password')" 
                                         class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,11 +166,11 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
                                 <div class="relative">
                                     <input type="password" name="password_confirmation" id="password_confirmation"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                        placeholder="Konfirmasi password baru">
+                                        placeholder="confirm new password">
                                     <button type="button" onclick="togglePassword('password_confirmation')" 
                                         class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -183,22 +183,22 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
+                
                     <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200">
                         <a href="{{ route('users.index') }}" 
-                           class="flex items-center px-6 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-all duration-200 mb-4 sm:mb-0">
+                           class="flex items-center px-6 py-3 text-gray-700 hover:text-gray-900 hover:bg-red-500 rounded-xl transition-all duration-200 mb-4 sm:mb-0">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
-                            Batal
+                            Cancel
                         </a>
                         
                         <button type="submit" 
-                                class="group relative flex items-center px-8 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 transform hover:-translate-y-0.5">
+                                class="group relative flex items-center px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:-translate-y-0.5">
                             <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
                             </svg>
-                            Simpan Perubahan
+                            Save Changes
                         </button>
                     </div>
                 </form>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Pengguna: ' . $user->name)
+@section('title', 'User Management : ' . $user->name)
 
 @section('content')
     <div class="min-h-screen bg-gray-50 py-8">

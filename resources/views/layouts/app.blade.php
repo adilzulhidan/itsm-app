@@ -110,6 +110,15 @@
                             <span class="sidebar-text whitespace-nowrap overflow-hidden transition-all duration-300">Asset Management</span>
                         </div>
                     </a>
+
+                    <a href="{{ route('analytics.index') }}" class="sidebar-item flex items-center px-3 py-2.5 rounded-lg mx-2 {{ Request::routeIs('analytics.*') ? 'active-link' : '' }}">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 3.055A9.001 9.001 0 0 1 20.945 13H11V3.055z"></path><path d="M20.488 16.223A9.003 9.003 0 0 1 11 21a9.003 9.003 0 0 1-8.488-11.777l17.976 6z"></path>
+                            </svg>
+                            <span class="sidebar-text whitespace-nowrap overflow-hidden transition-all duration-300">Laporan & Analitik</span>
+                        </div>
+                    </a>
                 @endif
                                 
                 <div class="px-3 py-2 mt-4 menu-label">

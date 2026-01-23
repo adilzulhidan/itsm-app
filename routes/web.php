@@ -9,7 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KnowledgeBaseController;
-
+use App\Http\Controllers\AnalyticsController;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.perform');
@@ -45,4 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledgebase.index');
+
+   Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+   Route::get('/analytics/export-pdf', [AnalyticsController::class, 'exportPdf'])->name('analytics.export');
+
 });

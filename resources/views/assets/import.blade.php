@@ -6,7 +6,7 @@
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header Section -->
+        
         <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Import Data Assets</h1>
@@ -19,10 +19,10 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+    
         <div class="bg-white shadow overflow-hidden border border-gray-200 rounded-lg">
             <div class="p-6">
-                <!-- Instructions -->
+        
                 <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
                     <h3 class="text-lg font-medium text-blue-800 mb-2">Instruksi Import:</h3>
                     <ul class="list-disc pl-5 text-sm text-blue-700 space-y-1">
@@ -34,12 +34,12 @@
                     </ul>
                 </div>
 
-                <!-- Upload Form -->
+        
                 <form action="{{ route('assets.import.process') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="space-y-6">
-                        <!-- File Upload -->
+                
                         <div>
                             <label for="csv_file" class="block text-sm font-medium text-gray-700 mb-2">
                                 Pilih File CSV
@@ -64,7 +64,7 @@
                             @enderror
                         </div>
 
-                        <!-- CSV Template -->
+                    
                         <div>
                             <h3 class="text-sm font-medium text-gray-700 mb-2">Template CSV</h3>
                             <div class="bg-gray-50 border border-gray-200 rounded-md p-4 overflow-x-auto">
@@ -75,7 +75,7 @@ Monitor HP;Active;Monitor;Finance;SN789012;AST002;2024-01-20</pre>
                             <p class="mt-2 text-xs text-gray-500">Download <a href="#" class="text-indigo-600 hover:text-indigo-500">template CSV</a> untuk format yang benar</p>
                         </div>
 
-                        <!-- Submit Button -->
+                    
                         <div class="flex items-center justify-end">
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,7 +89,7 @@ Monitor HP;Active;Monitor;Finance;SN789012;AST002;2024-01-20</pre>
             </div>
         </div>
 
-        <!-- Results Section (if any previous imports) -->
+        
         @if(session('success') || session('error'))
         <div class="mt-6">
             <div class="bg-white shadow border border-gray-200 rounded-lg p-6">

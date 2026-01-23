@@ -6,7 +6,7 @@
 <div class="py-6">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Header Section -->
+
         <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
                 <div class="flex items-center gap-3">
@@ -41,9 +41,9 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+    
         <div class="bg-white shadow overflow-hidden border border-gray-200 rounded-lg">
-            <!-- Asset Header -->
+            
             <div class="px-6 py-5 bg-gray-50 border-b border-gray-200">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -73,12 +73,12 @@
                 </div>
             </div>
 
-            <!-- Asset Details -->
+    
             <div class="px-6 py-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Left Column -->
+        
                     <div class="space-y-6">
-                        <!-- Asset Information -->
+            
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Aset</h3>
                             <div class="bg-gray-50 rounded-lg p-4">
@@ -103,7 +103,7 @@
                             </div>
                         </div>
 
-                        <!-- Location Information -->
+                        
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Lokasi</h3>
                             <div class="bg-gray-50 rounded-lg p-4">
@@ -121,9 +121,9 @@
                         </div>
                     </div>
 
-                    <!-- Right Column -->
+                
                     <div class="space-y-6">
-                        <!-- Status & Dates -->
+                
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Status & Tanggal</h3>
                             <div class="bg-gray-50 rounded-lg p-4 space-y-4">
@@ -156,7 +156,7 @@
                             </div>
                         </div>
 
-                        <!-- Additional Information -->
+                        
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
                             <div class="bg-gray-50 rounded-lg p-4">
@@ -191,7 +191,7 @@
             </div>
         </div>
 
-        <!-- Related Information (Placeholder for future features) -->
+    
         <div class="mt-8">
             <div class="bg-white shadow border border-gray-200 rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -208,7 +208,7 @@
     </div>
 </div>
 
-<!-- Custom Styles -->
+
 <style>
     .font-mono {
         font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;

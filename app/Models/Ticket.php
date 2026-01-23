@@ -45,4 +45,14 @@ class Ticket extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

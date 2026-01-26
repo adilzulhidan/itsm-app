@@ -7,12 +7,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        /* Dark mode variables */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
         .sidebar-item { 
-            color: #e5e7eb; 
+            color: #cbd5e1; 
             transition: all 0.2s ease;
         }
         .sidebar-item:hover { 
-            background-color: rgba(59, 130, 246, 0.1); 
+            background-color: rgba(59, 130, 246, 0.15); 
             color: #ffffff;
             transform: translateX(5px);
         }
@@ -21,7 +40,7 @@
         }
         
         .active-link { 
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), transparent);
             color: #ffffff !important; 
             border-left: 4px solid #3b82f6;
             font-weight: 600;
@@ -35,7 +54,7 @@
             transition: all 0.2s ease;
         } 
         .logout-btn:hover { 
-            background-color: rgba(239, 68, 68, 0.2); 
+            background-color: rgba(239, 68, 68, 0.25); 
             color: #f87171 !important; 
             transform: translateX(5px);
         }
@@ -51,19 +70,27 @@
         #sidebar::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
 
         .glass-effect {
-            background: rgba(30, 41, 59, 0.95); 
+            background: rgba(15, 23, 42, 0.95); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* Breadcrumb dark mode */
+        .breadcrumb-item {
+            color: var(--text-secondary);
+        }
+        .breadcrumb-item:last-child {
+            color: var(--text-primary);
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex">
+<body class="bg-gray-900 min-h-screen flex">
     
     <div class="flex min-h-screen w-full">
     
-    <div id="sidebar" class="glass-effect w-64 text-white flex flex-col min-h-screen transition-all duration-300 flex-shrink-0 overflow-y-auto z-20">
-            <div id="sidebar-header" class="p-4 border-b border-gray-700/50 flex items-center justify-between sticky top-0 bg-[#1e293b] z-10">
+    <div id="sidebar" class="glass-effect w-64 text-gray-200 flex flex-col min-h-screen transition-all duration-300 flex-shrink-0 overflow-y-auto z-20">
+            <div id="sidebar-header" class="p-4 border-b border-gray-700/50 flex items-center justify-between sticky top-0 bg-slate-800/90 z-10">
                 <div class="flex items-center space-x-3 overflow-hidden">
                     <div>
                         <h1 id="header-text" class="text-lg font-bold text-white whitespace-nowrap transition-opacity duration-300">ITSM</h1>
@@ -117,6 +144,15 @@
                                 <path d="M11 3.055A9.001 9.001 0 0 1 20.945 13H11V3.055z"></path><path d="M20.488 16.223A9.003 9.003 0 0 1 11 21a9.003 9.003 0 0 1-8.488-11.777l17.976 6z"></path>
                             </svg>
                             <span class="sidebar-text whitespace-nowrap overflow-hidden transition-all duration-300">Laporan & Analitik</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('monitor.index') }}" class="sidebar-item flex items-center px-3 py-2.5 rounded-lg mx-2 {{ Request::routeIs('monitor.*') ? 'active-link' : '' }}">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="6" x2="12" y2="12"></line><line x1="16" y1="14" x2="12" y2="12"></line>
+                            </svg>
+                            <span class="sidebar-text whitespace-nowrap overflow-hidden transition-all duration-300">Network Monitor</span>
                         </div>
                     </a>
                 @endif
@@ -181,46 +217,46 @@
 
         <div id="main-content" class="flex-1 flex flex-col min-h-screen transition-all duration-300">
             
-            <header class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm sticky top-0 z-10">
+            <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 shadow-lg sticky top-0 z-10">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <button id="mobileMenuToggle" class="lg:hidden text-gray-600 hover:text-gray-900">
+                        <button id="mobileMenuToggle" class="lg:hidden text-gray-400 hover:text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h1 class="text-xl font-semibold text-gray-800">@yield('title')</h1>
+                        <h1 class="text-xl font-semibold text-white">@yield('title')</h1>
                     </div>
                     
                     <div class="flex items-center space-x-4">
                         <div class="relative">
-                            <button id="notificationBtn" class="p-2 text-gray-600 hover:text-blue-600 relative">
+                            <button id="notificationBtn" class="p-2 text-gray-400 hover:text-blue-400 relative">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
-                                <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border border-white"></span>
+                                <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-slate-800"></span>
                             </button>
                         </div>
                         
-                        <div class="hidden md:flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg">
-                            <i class="bi bi-calendar-check text-blue-600"></i>
-                            <span class="text-sm text-gray-600">{{ date('d F Y') }}</span>
+                        <div class="hidden md:flex items-center space-x-2 bg-slate-700/50 px-4 py-2 rounded-lg border border-slate-600">
+                            <i class="bi bi-calendar-check text-blue-400"></i>
+                            <span class="text-sm text-gray-300">{{ date('d F Y') }}</span>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <main class="flex-1 p-6 bg-gray-50 overflow-y-auto">
+            <main class="flex-1 p-6 bg-slate-900 overflow-y-auto">
                 <div class="mb-6">
                     <nav class="flex" aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-3">
                             @if(isset($breadcrumb))
                                 <li>
                                     <div class="flex items-center">
-                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                                         </svg>
-                                        <span class="ml-1 text-sm font-medium text-gray-700 md:ml-2">{{ $breadcrumb }}</span>
+                                        <span class="ml-1 text-sm font-medium text-gray-300 md:ml-2">{{ $breadcrumb }}</span>
                                     </div>
                                 </li>
                             @endif
@@ -228,7 +264,7 @@
                     </nav>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="bg-slate-800/50 rounded-xl border border-slate-700/50 p-6 shadow-lg backdrop-blur-sm">
                     @yield('content')
                 </div>
             </main>

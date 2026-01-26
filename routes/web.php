@@ -10,6 +10,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\NetworkMonitorController;
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.perform');
@@ -45,8 +46,18 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledgebase.index');
+   
+    
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/export', [AnalyticsController::class, 'exportPdf'])->name('analytics.export');
 
-   Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
-   Route::get('/analytics/export-pdf', [AnalyticsController::class, 'exportPdf'])->name('analytics.export');
-
+    Route::get('/network-monitor', [NetworkMonitorController::class, 'index'])->name('monitor.index');
+    // Halaman View
+    Route::get('/monitor/servers', [ServerMonitorController::class, 'index'])->name('monitor.servers');
+    
+    // API Data (AJAX)
+    Route::get('/monitor/api/data', [ServerMonitorController::class, 'getServerData'])->name('monitor.api');
+    
+    // Trigger Update (Opsional)
+    Route::get('/monitor/api/ping', [ServerMonitorController::class, 'checkStatus']);
 });

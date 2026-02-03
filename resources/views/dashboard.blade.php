@@ -116,7 +116,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Fungsi untuk mendapatkan warna berdasarkan tema
         function getChartColors() {
             const isDarkMode = document.documentElement.classList.contains('dark');
             
@@ -124,7 +123,7 @@
                 return {
                     gridColor: 'rgba(75, 85, 99, 0.3)',
                     tickColor: 'rgba(209, 213, 219, 0.8)',
-                    textColor: 'rgba(209, 213, 219, 0.9)'
+                    textColor: 'rgb(231, 234, 237)'
                 };
             } else {
                 return {
@@ -135,12 +134,10 @@
             }
         }
 
-        // Fungsi untuk mengaplikasikan tema ke chart
         function applyDarkModeToChart(chart) {
             const colors = getChartColors();
             
             if (chart.options.scales) {
-                // Apply to all axes
                 Object.keys(chart.options.scales).forEach(scaleKey => {
                     if (chart.options.scales[scaleKey].grid) {
                         chart.options.scales[scaleKey].grid.color = colors.gridColor;
@@ -154,11 +151,9 @@
             chart.update();
         }
 
-        // Fungsi untuk menginisialisasi chart dengan tema yang benar
         function initializeChartWithTheme(ctx, config) {
             const colors = getChartColors();
             
-            // Apply theme to scales if they exist
             if (config.options && config.options.scales) {
                 Object.keys(config.options.scales).forEach(scaleKey => {
                     if (!config.options.scales[scaleKey].grid) {
@@ -486,15 +481,15 @@
             monthlyCtx.fillText('No data available', monthlyCtx.canvas.width / 2, monthlyCtx.canvas.height / 2);
         }
 
-        // Fungsi untuk mendeteksi perubahan tema dan memperbarui chart
+        
         function updateChartsForTheme() {
             const colors = getChartColors();
             
-            // Update donut chart legend
+            
             donutChart.options.plugins.legend.labels.color = colors.textColor;
             donutChart.update();
             
-            // Update line chart
+    
             if (lineChart.options.scales) {
                 Object.keys(lineChart.options.scales).forEach(scaleKey => {
                     if (lineChart.options.scales[scaleKey].grid) {
@@ -506,12 +501,11 @@
                 });
                 lineChart.update();
             }
+        
             
-            // Update other charts similarly if they exist
-            // Note: You might need to store references to all charts
         }
 
-        // Observasi perubahan class dark pada html
+
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.attributeName === 'class') {
@@ -520,7 +514,7 @@
             });
         });
 
-        // Mulai observasi
+    
         observer.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['class']

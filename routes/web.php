@@ -48,8 +48,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledgebase.index');
    
     
-    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
-    Route::get('/analytics/export', [AnalyticsController::class, 'exportPdf'])->name('analytics.export');
+   Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+Route::get('/analytics/export-pdf', [AnalyticsController::class, 'exportPdf'])->name('analytics.export.pdf');
+
+// API routes untuk real-time bandwidth
+Route::get('/api/bandwidth/data', [AnalyticsController::class, 'getBandwidthData'])->name('api.bandwidth.data');
+Route::get('/api/bandwidth/history', [AnalyticsController::class, 'getBandwidthHistory'])->name('api.bandwidth.history');
 
     Route::get('/network-monitor', [NetworkMonitorController::class, 'index'])->name('monitor.index');
     // Halaman View

@@ -215,6 +215,11 @@
         box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
     }
 
+    .status-critical {
+        background-color: #ef4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    }
+
     .network-stats {
         position: absolute;
         bottom: 16px;
@@ -250,7 +255,74 @@
         font-weight: 600;
         color: #e2e8f0;
     }
+
+    /* Bandwidth specific styles */
+    .bandwidth-meter {
+        height: 10px;
+        border-radius: 5px;
+        background: rgba(30, 41, 59, 0.5);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .bandwidth-fill {
+        height: 100%;
+        border-radius: 5px;
+        transition: width 0.3s ease;
+    }
+
+    .interface-card {
+        border-left: 3px solid;
+        padding-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .interface-up {
+        border-left-color: #10b981;
+    }
+
+    .interface-down {
+        border-left-color: #ef4444;
+    }
+
+    .speed-indicator {
+        font-family: 'Courier New', monospace;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(30, 41, 59, 0.7);
+    }
 </style>
+
+@php
+    // Helper function to format bytes
+    function formatBytes($bytes, $precision = 2) {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= pow(1024, $pow);
+        return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
+    // Get bandwidth percentage for display
+    $bandwidthPercentage = 0;
+    if (isset($bandwidthUsage['avg_rx_speed']) && isset($bandwidthUsage['avg_tx_speed'])) {
+        $totalSpeed = $bandwidthUsage['avg_rx_speed'] + $bandwidthUsage['avg_tx_speed'];
+        $maxSpeed = 100000000; // 100 MB/s as baseline
+        $bandwidthPercentage = min(100, ($totalSpeed / $maxSpeed) * 100);
+    }
+
+    // Calculate network health score
+    $onlineInterfaces = 0;
+    $totalInterfaces = count($networkStats['interfaces'] ?? []);
+    foreach ($networkStats['interfaces'] ?? [] as $interface) {
+        if (($interface['status'] ?? '') === 'up') {
+            $onlineInterfaces++;
+        }
+    }
+    $networkHealth = $totalInterfaces > 0 ? round(($onlineInterfaces / $totalInterfaces) * 100, 1) : 100;
+@endphp
 
 <div class="w-full min-h-screen pb-16">
 
@@ -261,6 +333,8 @@
                 <span id="live-clock" class="text-emerald-400 font-bold">00:00:00</span>
                 <span>|</span>
                 <span>SYSTEM STATUS: <span class="text-emerald-400">NOMINAL</span></span>
+                <span>|</span>
+                <span>LAST UPDATE: <span id="last-update" class="text-sky-400">{{ $networkStats['timestamp'] ?? now()->format('H:i:s') }}</span></span>
             </div>
         </div>
 
@@ -274,7 +348,7 @@
             <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors">
                 FILTER
             </button>
-            <a href="{{ route('analytics.export', ['start_date' => request('start_date', $startDate), 'end_date' => request('end_date', $endDate)]) }}" target="_blank"
+            <a href="{{ route('analytics.export.pdf', ['start_date' => request('start_date', $startDate), 'end_date' => request('end_date', $endDate)]) }}" target="_blank"
                class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors flex items-center gap-1">
                <i class="bi bi-file-pdf"></i> PDF
             </a>
@@ -314,9 +388,70 @@
         <div class="noc-card p-4 flex flex-col justify-between h-24 border-l-4 border-l-emerald-500">
             <div class="flex justify-between items-start">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Network Health</span>
-                <span class="pulse-dot bg-emerald-500"></span>
+                <span class="pulse-dot {{ $networkHealth >= 90 ? 'bg-emerald-500' : ($networkHealth >= 70 ? 'bg-amber-500' : 'bg-rose-500') }}"></span>
             </div>
-            <div class="text-2xl font-bold text-white">99.9% <span class="text-xs font-normal text-emerald-400">UP</span></div>
+            <div class="text-2xl font-bold text-white">{{ $networkHealth }}% <span class="text-xs font-normal {{ $networkHealth >= 90 ? 'text-emerald-400' : ($networkHealth >= 70 ? 'text-amber-400' : 'text-rose-400') }}">UP</span></div>
+            <div class="text-xs text-slate-400">{{ $onlineInterfaces }}/{{ $totalInterfaces }} Interfaces</div>
+        </div>
+    </div>
+
+    <!-- Bandwidth Monitoring Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="noc-card p-4">
+            <h3 class="text-xs font-bold text-slate-400 mb-3 uppercase flex items-center gap-2">
+                <i class="bi bi-cloud-arrow-down text-sky-400"></i> Download Bandwidth
+            </h3>
+            <div class="text-2xl font-bold text-white mb-2">
+                {{ isset($bandwidthUsage['avg_rx_speed']) ? formatBytes($bandwidthUsage['avg_rx_speed']) . '/s' : 'N/A' }}
+            </div>
+            <div class="text-xs text-slate-400 mb-3">
+                Average Speed
+            </div>
+            <div class="bandwidth-meter">
+                <div class="bandwidth-fill bg-sky-500" style="width: {{ isset($bandwidthUsage['avg_rx_speed']) ? min(100, ($bandwidthUsage['avg_rx_speed'] / 10000000) * 100) : 0 }}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-400 mt-2">
+                <span>Peak: {{ isset($bandwidthUsage['peak_rx_speed']) ? formatBytes($bandwidthUsage['peak_rx_speed']) . '/s' : 'N/A' }}</span>
+                <span>Total: {{ formatBytes($networkStats['total_rx_bytes'] ?? 0) }}</span>
+            </div>
+        </div>
+
+        <div class="noc-card p-4">
+            <h3 class="text-xs font-bold text-slate-400 mb-3 uppercase flex items-center gap-2">
+                <i class="bi bi-cloud-arrow-up text-emerald-400"></i> Upload Bandwidth
+            </h3>
+            <div class="text-2xl font-bold text-white mb-2">
+                {{ isset($bandwidthUsage['avg_tx_speed']) ? formatBytes($bandwidthUsage['avg_tx_speed']) . '/s' : 'N/A' }}
+            </div>
+            <div class="text-xs text-slate-400 mb-3">
+                Average Speed
+            </div>
+            <div class="bandwidth-meter">
+                <div class="bandwidth-fill bg-emerald-500" style="width: {{ isset($bandwidthUsage['avg_tx_speed']) ? min(100, ($bandwidthUsage['avg_tx_speed'] / 5000000) * 100) : 0 }}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-400 mt-2">
+                <span>Peak: {{ isset($bandwidthUsage['peak_tx_speed']) ? formatBytes($bandwidthUsage['peak_tx_speed']) . '/s' : 'N/A' }}</span>
+                <span>Total: {{ formatBytes($networkStats['total_tx_bytes'] ?? 0) }}</span>
+            </div>
+        </div>
+
+        <div class="noc-card p-4">
+            <h3 class="text-xs font-bold text-slate-400 mb-3 uppercase flex items-center gap-2">
+                <i class="bi bi-diagram-3 text-violet-400"></i> Total Traffic
+            </h3>
+            <div class="text-2xl font-bold text-white mb-2">
+                {{ $bandwidthUsage['total_traffic_human'] ?? '0 B' }}
+            </div>
+            <div class="text-xs text-slate-400 mb-3">
+                {{ $bandwidthUsage['data_points'] ?? 0 }} data points
+            </div>
+            <div class="bandwidth-meter">
+                <div class="bandwidth-fill bg-violet-500" style="width: {{ $bandwidthPercentage }}%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-400 mt-2">
+                <span>Period: {{ $bandwidthUsage['time_period'] ?? 0 }}s</span>
+                <span>Utilization: {{ round($bandwidthPercentage, 1) }}%</span>
+            </div>
         </div>
     </div>
 
@@ -335,32 +470,90 @@
             <div class="network-stats">
                 <div class="stat-item">
                     <span class="stat-dot bg-emerald-500"></span>
+                    <span class="stat-label">Interfaces:</span>
+                    <span class="stat-value">{{ $totalInterfaces }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-dot bg-emerald-500"></span>
                     <span class="stat-label">Online:</span>
-                    <span class="stat-value">8/10</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-dot bg-amber-500"></span>
-                    <span class="stat-label">Warning:</span>
-                    <span class="stat-value">1/10</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-dot bg-rose-500"></span>
-                    <span class="stat-label">Critical:</span>
-                    <span class="stat-value">1/10</span>
+                    <span class="stat-value">{{ $onlineInterfaces }}</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-dot bg-sky-500"></span>
                     <span class="stat-label">Bandwidth:</span>
-                    <span class="stat-value">72%</span>
+                    <span class="stat-value">{{ round($bandwidthPercentage, 1) }}%</span>
                 </div>
+                @if(isset($bandwidthUsage['avg_rx_speed']))
+                <div class="stat-item">
+                    <span class="stat-dot bg-sky-500"></span>
+                    <span class="stat-label">Download:</span>
+                    <span class="stat-value">{{ formatBytes($bandwidthUsage['avg_rx_speed']) }}/s</span>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <!-- Network Interfaces Details -->
+    <div class="noc-card mb-4">
+        <div class="p-3 border-b border-slate-800 bg-slate-900/50 rounded-t-lg">
+            <h3 class="text-xs font-bold text-slate-300 flex items-center gap-2">
+                <i class="bi bi-hdd-network text-sky-400"></i> NETWORK INTERFACES
+            </h3>
+        </div>
+        <div class="p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @forelse($networkStats['interfaces'] ?? [] as $interface)
+                <div class="interface-card {{ ($interface['status'] ?? '') === 'up' ? 'interface-up' : 'interface-down' }}">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-sm font-bold text-white">{{ $interface['interface'] ?? 'N/A' }}</span>
+                        <span class="text-xs px-2 py-1 rounded-full {{ ($interface['status'] ?? '') === 'up' ? 'bg-emerald-900/30 text-emerald-400' : 'bg-rose-900/30 text-rose-400' }}">
+                            {{ strtoupper($interface['status'] ?? 'unknown') }}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <div class="text-slate-400">Download</div>
+                            <div class="text-white font-medium">{{ $interface['rx_speed_human'] ?? '0 B/s' }}</div>
+                            <div class="text-slate-500 text-[10px]">Total: {{ formatBytes($interface['rx_bytes'] ?? 0) }}</div>
+                        </div>
+                        <div>
+                            <div class="text-slate-400">Upload</div>
+                            <div class="text-white font-medium">{{ $interface['tx_speed_human'] ?? '0 B/s' }}</div>
+                            <div class="text-slate-500 text-[10px]">Total: {{ formatBytes($interface['tx_bytes'] ?? 0) }}</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <span class="speed-indicator text-sky-400">
+                            ↓ {{ $interface['rx_speed_human'] ?? '0 B/s' }}
+                        </span>
+                        <span class="speed-indicator text-emerald-400">
+                            ↑ {{ $interface['tx_speed_human'] ?? '0 B/s' }}
+                        </span>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-3 text-center py-8">
+                    <i class="bi bi-wifi-off text-4xl text-slate-700 mb-2"></i>
+                    <p class="text-slate-400">No network interface data available</p>
+                    @if($networkStats['is_mock'] ?? false)
+                    <p class="text-xs text-amber-400 mt-1">Displaying mock data for demonstration</p>
+                    @endif
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div class="noc-card p-4 lg:col-span-2">
             <h3 class="text-xs font-bold text-slate-400 mb-2 uppercase">Tren Volume Tiket</h3>
             <div id="trendChart" class="w-full h-[250px]"></div>
+        </div>
+        
+        <div class="noc-card p-4">
+            <h3 class="text-xs font-bold text-slate-400 mb-2 uppercase">Kategori Tiket</h3>
+            <div id="categoryChart" class="w-full h-[250px]"></div>
         </div>
     </div>
 
@@ -373,7 +566,7 @@
             $tickerContent = '
                 <span class="text-emerald-500 mx-2">●</span> SYSTEM STATUS: <span class="text-emerald-400 font-bold">ONLINE</span>
                 <span class="text-slate-600 mx-4">|</span>
-                <span class="text-sky-500 mx-2">●</span> LAST UPDATE: <span class="text-sky-400 font-bold">' . now()->format('H:i:s') . '</span>
+                <span class="text-sky-500 mx-2">●</span> LAST UPDATE: <span class="text-sky-400 font-bold">' . ($networkStats['timestamp'] ?? now()->format('H:i:s')) . '</span>
                 <span class="text-slate-600 mx-4">|</span>
                 <span class="text-amber-500 mx-2">●</span> TOTAL TICKETS: <span class="text-white font-bold">' . $totalTickets . '</span>
                 <span class="text-slate-600 mx-4">|</span>
@@ -381,7 +574,9 @@
                 <span class="text-slate-600 mx-4">|</span>
                 <span class="text-rose-500 mx-2">●</span> COMPLETION RATE: <span class="text-white font-bold">' . $completionRate . '%</span>
                 <span class="text-slate-600 mx-4">|</span>
-                <span class="text-slate-500 mx-2">●</span> DATABASE: STABLE
+                <span class="text-sky-500 mx-2">●</span> BANDWIDTH: <span class="text-white font-bold">' . ($bandwidthUsage['total_traffic_human'] ?? '0 B') . '</span>
+                <span class="text-slate-600 mx-4">|</span>
+                <span class="text-emerald-500 mx-2">●</span> NETWORK HEALTH: <span class="text-white font-bold">' . $networkHealth . '%</span>
                 <span class="text-slate-600 mx-4">|</span>
                 MONITORING ACTIVE
             ';
@@ -399,6 +594,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
+    // Pass network data from controller to JavaScript
+    const networkData = @json($networkStats['interfaces'] ?? []);
+    const bandwidthData = @json($bandwidthUsage ?? []);
+    const isMockData = @json($networkStats['is_mock'] ?? false);
+
     // Clock Logic
     function updateClock() {
         const now = new Date();
@@ -413,117 +613,152 @@
     setInterval(updateClock, 1000);
     updateClock();
 
+    // Auto-refresh network data every 10 seconds
+    function refreshNetworkData() {
+        fetch('/api/bandwidth/data')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('last-update').textContent = 
+                        new Date(data.data.timestamp).toLocaleTimeString();
+                    
+                    // Update bandwidth cards if needed
+                    console.log('Network data refreshed:', data.data);
+                }
+            })
+            .catch(error => console.error('Error refreshing network data:', error));
+    }
+
+    // Initial refresh after 2 seconds, then every 10 seconds
+    setTimeout(refreshNetworkData, 2000);
+    setInterval(refreshNetworkData, 10000);
+
     // Network Topology
     document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('networkTopology');
         if (!container) return;
 
-        // Define network nodes
-        const nodes = [
-            { 
-                id: 1, 
-                name: 'Internet Gateway',
-                type: 'cloud',
-                icon: '🌐',
-                status: 'online',
-                x: 15, y: 50,
-                stats: '1 Gbps'
-            },
-            { 
-                id: 2, 
-                name: 'Firewall',
-                type: 'security',
-                icon: '🛡️',
-                status: 'online',
-                x: 25, y: 50,
-                stats: '98% CPU'
-            },
-            { 
-                id: 3, 
-                name: 'Core Switch',
-                type: 'network',
-                icon: '🔀',
-                status: 'online',
-                x: 40, y: 50,
-                stats: '720 Mbps'
-            },
-            { 
-                id: 4, 
-                name: 'Web Server',
-                type: 'server',
-                icon: '💻',
-                status: 'warning',
-                x: 55, y: 30,
-                stats: '85% Load'
-            },
-            { 
-                id: 5, 
-                name: 'Database',
-                type: 'database',
-                icon: '🗄️',
-                status: 'online',
-                x: 55, y: 50,
-                stats: '64% CPU'
-            },
-            { 
-                id: 6, 
-                name: 'Backup Server',
-                type: 'storage',
-                icon: '💾',
-                status: 'online',
-                x: 55, y: 70,
-                stats: '2.4 TB'
-            },
-            { 
-                id: 7, 
-                name: 'Office LAN',
-                type: 'network',
-                icon: '🏢',
-                status: 'online',
-                x: 70, y: 30,
-                stats: '48 Clients'
-            },
-            { 
-                id: 8, 
-                name: 'Production',
-                type: 'server',
-                icon: '🏭',
-                status: 'critical',
-                x: 70, y: 50,
-                stats: '95% Load'
-            },
-            { 
-                id: 9, 
-                name: 'Backup NAS',
-                type: 'storage',
-                icon: '📀',
-                status: 'online',
-                x: 70, y: 70,
-                stats: '4.8 TB'
-            },
-            { 
-                id: 10, 
-                name: 'Monitoring',
-                type: 'monitor',
-                icon: '📊',
-                status: 'online',
-                x: 85, y: 50,
-                stats: 'Active'
-            }
-        ];
+        // Define network nodes - use real data if available
+        let nodes = [];
+        let connections = [];
 
-        // Define connections
-        const connections = [
-            { from: 1, to: 2, label: '1 Gbps' },
-            { from: 2, to: 3, label: '10 Gbps' },
-            { from: 3, to: 4, label: '1 Gbps' },
-            { from: 3, to: 5, label: '10 Gbps' },
-            { from: 3, to: 6, label: '1 Gbps' },
-            { from: 4, to: 7, label: '100 Mbps' },
-            { from: 5, to: 8, label: '10 Gbps' },
-            { from: 6, to: 9, label: '1 Gbps' },
-            { from: 3, to: 10, label: '100 Mbps' }
-        ];
+        if (networkData.length > 0) {
+            // Use real interface data
+            nodes = networkData.map((iface, index) => {
+                // Position nodes in a grid
+                const row = Math.floor(index / 4);
+                const col = index % 4;
+                const x = 10 + col * 25;
+                const y = 20 + row * 25;
+
+                let status = 'online';
+                if ((iface.status || '').toLowerCase() !== 'up') {
+                    status = 'critical';
+                } else if ((iface.rx_speed || 0) > 1000000 || (iface.tx_speed || 0) > 1000000) {
+                    status = 'warning';
+                }
+
+                // Get icon based on interface type
+                let icon = '🔌';
+                const ifaceName = (iface.interface || '').toLowerCase();
+                if (ifaceName.includes('eth') || ifaceName.includes('enp')) {
+                    icon = '🔗';
+                } else if (ifaceName.includes('wlan') || ifaceName.includes('wlp')) {
+                    icon = '📶';
+                } else if (ifaceName.includes('lo') || ifaceName.includes('loopback')) {
+                    icon = '🔁';
+                }
+
+                return {
+                    id: index + 1,
+                    name: iface.interface || `Interface ${index + 1}`,
+                    type: 'network',
+                    icon: icon,
+                    status: status,
+                    x: x,
+                    y: y,
+                    stats: (iface.rx_speed_human || '0 B/s') + ' / ' + (iface.tx_speed_human || '0 B/s'),
+                    speed_rx: iface.rx_speed || 0,
+                    speed_tx: iface.tx_speed || 0
+                };
+            });
+
+            // Create connections between nodes
+            for (let i = 0; i < Math.min(nodes.length, 5); i++) {
+                for (let j = i + 1; j < Math.min(nodes.length, 5); j++) {
+                    if (Math.random() > 0.5) {
+                        connections.push({ from: nodes[i].id, to: nodes[j].id });
+                    }
+                }
+            }
+        } else {
+            // Fallback to simulated nodes
+            nodes = [
+                { 
+                    id: 1, 
+                    name: 'Internet Gateway',
+                    type: 'cloud',
+                    icon: '🌐',
+                    status: 'online',
+                    x: 15, y: 50,
+                    stats: '1 Gbps',
+                    speed_rx: 100000000,
+                    speed_tx: 50000000
+                },
+                { 
+                    id: 2, 
+                    name: 'Firewall',
+                    type: 'security',
+                    icon: '🛡️',
+                    status: 'online',
+                    x: 25, y: 50,
+                    stats: '98% CPU',
+                    speed_rx: 90000000,
+                    speed_tx: 40000000
+                },
+                { 
+                    id: 3, 
+                    name: 'Core Switch',
+                    type: 'network',
+                    icon: '🔀',
+                    status: 'online',
+                    x: 40, y: 50,
+                    stats: '720 Mbps',
+                    speed_rx: 720000000,
+                    speed_tx: 720000000
+                },
+                { 
+                    id: 4, 
+                    name: 'Web Server',
+                    type: 'server',
+                    icon: '💻',
+                    status: 'warning',
+                    x: 55, y: 30,
+                    stats: '85% Load',
+                    speed_rx: 50000000,
+                    speed_tx: 10000000
+                },
+                { 
+                    id: 5, 
+                    name: 'Database',
+                    type: 'database',
+                    icon: '🗄️',
+                    status: 'online',
+                    x: 55, y: 50,
+                    stats: '64% CPU',
+                    speed_rx: 30000000,
+                    speed_tx: 20000000
+                }
+            ];
+
+            // Simulated connections
+            connections = [
+                { from: 1, to: 2 },
+                { from: 2, to: 3 },
+                { from: 3, to: 4 },
+                { from: 3, to: 5 }
+            ];
+        }
 
         // Create nodes
         nodes.forEach(node => {
@@ -578,6 +813,11 @@
                 nodeEl.style.boxShadow = `0 0 15px ${borderColor}40`;
             });
             
+            // Add click event for details
+            nodeEl.addEventListener('click', () => {
+                alert(`${node.name}\nStatus: ${node.status.toUpperCase()}\nSpeed: ${node.stats}`);
+            });
+            
             container.appendChild(nodeEl);
         });
 
@@ -615,33 +855,26 @@
         });
 
         function createDataFlow(line, fromNode, toNode) {
-            const flow = document.createElement('div');
-            flow.className = 'data-flow';
+            // Determine flow speed based on node speeds
+            const avgSpeed = (fromNode.speed_rx + toNode.speed_tx) / 2;
+            const flowCount = Math.min(5, Math.max(1, Math.floor(avgSpeed / 1000000)));
             
-            // Randomize animation delay
-            flow.style.animationDelay = `${Math.random() * 2}s`;
-            
-            // Position at start of line
-            flow.style.left = '0px';
-            flow.style.top = '-2px';
-            
-            line.appendChild(flow);
-            
-            // Create multiple data flows
-            setInterval(() => {
-                if (Math.random() > 0.5) {
-                    const newFlow = flow.cloneNode();
-                    newFlow.style.animationDelay = '0s';
-                    line.appendChild(newFlow);
-                    
-                    // Remove after animation completes
-                    setTimeout(() => {
-                        if (newFlow.parentNode === line) {
-                            line.removeChild(newFlow);
-                        }
-                    }, 3000);
-                }
-            }, 1000);
+            for (let i = 0; i < flowCount; i++) {
+                const flow = document.createElement('div');
+                flow.className = 'data-flow';
+                
+                // Randomize animation delay and duration
+                const delay = (i / flowCount) * 2;
+                const duration = 3 / (avgSpeed / 1000000 + 0.5);
+                
+                flow.style.animationDelay = `${delay}s`;
+                flow.style.animationDuration = `${duration}s`;
+                
+                flow.style.left = '0px';
+                flow.style.top = '-2px';
+                
+                line.appendChild(flow);
+            }
         }
 
         // Update stats periodically
@@ -650,25 +883,9 @@
             const warningCount = nodes.filter(n => n.status === 'warning').length;
             const criticalCount = nodes.filter(n => n.status === 'critical').length;
             
-            // Randomly change some statuses for realism
-            if (Math.random() < 0.1) {
-                const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
-                const statuses = ['online', 'warning', 'critical'];
-                randomNode.status = statuses[Math.floor(Math.random() * statuses.length)];
-                
-                // Update the node display
-                const nodeEl = container.querySelector(`.node:nth-child(${nodes.indexOf(randomNode) + 1})`);
-                if (nodeEl) {
-                    const badge = nodeEl.querySelector('.status-badge');
-                    if (badge) {
-                        badge.className = 'status-badge';
-                        badge.classList.add(`status-${randomNode.status}`);
-                    }
-                }
-            }
-            
-            // Update bandwidth usage
-            const bandwidth = Math.floor(60 + Math.random() * 20);
+            // Calculate total speed
+            const totalSpeed = nodes.reduce((sum, node) => sum + node.speed_rx + node.speed_tx, 0);
+            const bandwidth = Math.min(100, Math.round((totalSpeed / 1000000000) * 100));
             
             // Update stats display
             const stats = container.querySelector('.network-stats');
@@ -676,18 +893,18 @@
                 stats.innerHTML = `
                     <div class="stat-item">
                         <span class="stat-dot bg-emerald-500"></span>
+                        <span class="stat-label">Interfaces:</span>
+                        <span class="stat-value">${nodes.length}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-dot bg-emerald-500"></span>
                         <span class="stat-label">Online:</span>
-                        <span class="stat-value">${onlineCount}/${nodes.length}</span>
+                        <span class="stat-value">${onlineCount}</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-dot bg-amber-500"></span>
                         <span class="stat-label">Warning:</span>
-                        <span class="stat-value">${warningCount}/${nodes.length}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-dot bg-rose-500"></span>
-                        <span class="stat-label">Critical:</span>
-                        <span class="stat-value">${criticalCount}/${nodes.length}</span>
+                        <span class="stat-value">${warningCount}</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-dot bg-sky-500"></span>
@@ -727,7 +944,7 @@
     };
 
     // Trend Chart
-    new ApexCharts(document.querySelector("#trendChart"), {
+    const trendChart = new ApexCharts(document.querySelector("#trendChart"), {
         ...commonOptions,
         series: [{
             name: 'Tiket',
@@ -760,13 +977,14 @@
             }
         },
         colors: ['#0ea5e9']
-    }).render();
+    });
+    trendChart.render();
 
     // Category Chart
-    new ApexCharts(document.querySelector("#categoryChart"), {
+    const categoryChart = new ApexCharts(document.querySelector("#categoryChart"), {
         ...commonOptions,
         series: {!! json_encode($categoryData->pluck('total')) !!},
-        labels: {!! json_encode($categoryData->pluck('category.name')) !!},
+        labels: {!! json_encode($categoryData->pluck('category')) !!},
         chart: {
             ...commonOptions.chart,
             type: 'donut',
@@ -777,7 +995,7 @@
             colors: ['#0f172a'], 
             width: 3 
         },
-        colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+        colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'],
         legend: {
             position: 'bottom',
             horizontalAlign: 'center',
@@ -808,6 +1026,7 @@
                 }
             }
         }
-    }).render();
+    });
+    categoryChart.render();
 </script>
 @endsection

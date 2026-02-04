@@ -347,7 +347,7 @@
             strengthText.className = `ml-2 font-medium ${color.replace('bg-', 'text-')}`;
         }
         
-        // Check password match
+        
         const passwordInput = document.getElementById('password');
         const confirmInput = document.getElementById('password_confirmation');
         const matchIndicator = document.getElementById('passwordMatch');
@@ -364,7 +364,7 @@
             }
         });
         
-        // Initialize progress on load
+        
         document.addEventListener('DOMContentLoaded', updateProgress);
     </script>
 
@@ -390,7 +390,7 @@
             transition: width 0.5s ease-in-out;
         }
         
-        /* Optional: Custom scrollbar for dark mode */
+        
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -408,17 +408,17 @@
             background: #6b7280;
         }
         
-        /* Placeholder color for dark mode */
+       
         ::placeholder {
             color: #9ca3af;
         }
         
-        /* For Firefox */
+        
         ::-moz-placeholder {
             color: #9ca3af;
         }
         
-        /* For Internet Explorer */
+        
         :-ms-input-placeholder {
             color: #9ca3af;
         }

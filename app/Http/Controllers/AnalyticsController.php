@@ -13,33 +13,20 @@ class AnalyticsController extends Controller
 {
     public function index(Request $request)
     {
-        
         $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
-
-        
         $query = Ticket::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
-
-        
         $totalTickets = (clone $query)->count();
         $resolvedTickets = (clone $query)->where('status', 'resolved')->count();
         $completionRate = $totalTickets > 0 ? round(($resolvedTickets / $totalTickets) * 100, 1) : 0;
-
-        
-        $avgMinutes = (clone $query)->whereNotNull('resolved_at')
-            ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, created_at, resolved_at)) as avg_time')
-            ->value('avg_time');
-        
+        $avgMinutes = (clone $query)->whereNotNull('resolved_at')->selectRaw('AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 60) as avg_time')->value('avg_time');     
         $mttr = $avgMinutes ? round($avgMinutes / 60, 1) : 0;
-
-        
         $trendData = (clone $query)
-            ->selectRaw('DATE(created_at) as date, count(*) as total')
+            ->selectRaw('created_at::date as date, count(*) as total')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        
         $agentPerformance = (clone $query)
             ->select('assigned_to', DB::raw('count(*) as total'))
             ->whereNotNull('assigned_to')
@@ -49,7 +36,6 @@ class AnalyticsController extends Controller
             ->limit(10)
             ->get();
 
-        
         $categoryData = (clone $query)
             ->select('category', DB::raw('count(*) as total'))
             ->groupBy('category')
@@ -64,24 +50,20 @@ class AnalyticsController extends Controller
 
     public function exportPdf(Request $request)
     {
-        
         $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
 
-        
         $query = Ticket::whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
 
-        
         $totalTickets = (clone $query)->count();
         $resolvedTickets = (clone $query)->where('status', 'resolved')->count();
         $completionRate = $totalTickets > 0 ? round(($resolvedTickets / $totalTickets) * 100, 1) : 0;
-        
         $avgMinutes = (clone $query)->whereNotNull('resolved_at')
-            ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, created_at, resolved_at)) as avg_time')
+            ->selectRaw('AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 60) as avg_time')
             ->value('avg_time');
+            
         $mttr = $avgMinutes ? round($avgMinutes / 60, 1) : 0;
 
-        
         $agentPerformance = (clone $query)
             ->select('assigned_to', DB::raw('count(*) as total'))
             ->whereNotNull('assigned_to')
@@ -90,20 +72,17 @@ class AnalyticsController extends Controller
             ->orderByDesc('total')
             ->get(); 
 
-        
         $categoryData = (clone $query)
             ->select('category', DB::raw('count(*) as total'))
             ->groupBy('category')
             ->get();
 
-        
         $pdf = Pdf::loadView('analytics.pdf_report', compact(
             'startDate', 'endDate', 
             'totalTickets', 'completionRate', 'mttr', 
             'agentPerformance', 'categoryData'
         ));
 
-        
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('Laporan-ITSM-' . $startDate . '-sd-' . $endDate . '.pdf');

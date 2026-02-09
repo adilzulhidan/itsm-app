@@ -102,19 +102,22 @@
                                     <span class="text-red-400 ml-1">*</span>
                                 </label>
                                 <select name="department" 
-                                    class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white transition-all duration-200 appearance-none"
-                                    required
-                                    onchange="updateProgress()">
-                                    <option value="" class="bg-gray-800">-- Choice Department --</option>
-                                    <option value="IT" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
-                                    <option value="Engineering" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
-                                    <option value="HRD" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'HRD/GA') ? 'selected' : '' }}>HRGA</option>
-                                    <option value="Finance" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'Finance') ? 'selected' : '' }}>Finance</option>
-                                    <option value="GA" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'Purchasing/Exim') ? 'selected' : '' }}>Purchasing/Exim</option>
-                                    <option value="Marketing" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'Sales') ? 'selected' : '' }}>Sales</option>
-                                    <option value="Marketing" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'PPIC') ? 'selected' : '' }}>PPIC</option>
-                                    <option value="Marketing" class="bg-gray-800" {{ (old('department', $user->department ?? '') == 'QC') ? 'selected' : '' }}>QC</option>
-                                </select>
+    class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white transition-all duration-200 appearance-none"
+    required
+    onchange="updateProgress()">
+    <option value="" class="bg-gray-800">-- Choice Department --</option>
+    <option value="IT" class="bg-gray-800" {{ (old('department') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
+    <option value="Engineering" class="bg-gray-800" {{ (old('department') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
+    <option value="HRGA" class="bg-gray-800" {{ (old('department') == 'HRGA') ? 'selected' : '' }}>HRGA (Human Resource & General Affair)</option>
+    
+    <option value="Finance & Accounting" class="bg-gray-800" {{ (old('department') == 'Finance & Accounting') ? 'selected' : '' }}>Finance & Accounting</option>
+    
+    <option value="Purchasing" class="bg-gray-800" {{ (old('department') == 'Purchasing') ? 'selected' : '' }}>Purchasing/Exim</option>
+    <option value="Sales" class="bg-gray-800" {{ (old('department') == 'Sales') ? 'selected' : '' }}>Sales Marketing</option>
+    <option value="PPIC" class="bg-gray-800" {{ (old('department') == 'PPIC') ? 'selected' : '' }}>PPIC</option>
+    <option value="QC" class="bg-gray-800" {{ (old('department') == 'QC') ? 'selected' : '' }}>QC (Quality Control)</option>
+    <option value="Produksi" class="bg-gray-800" {{ (old('department') == 'Produksi') ? 'selected' : '' }}>Production</option>
+</select>
                                 <p class="mt-2 text-xs text-gray-400 flex items-center">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>

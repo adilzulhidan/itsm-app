@@ -51,7 +51,6 @@
         background: #475569;
     }
 
-    /* Ticker Styles */
     .ticker-wrap {
         position: fixed;
         bottom: 0;
@@ -92,7 +91,6 @@
         animation-play-state: paused;
     }
 
-    /* Network Topology Specific Styles */
     .pulse-dot {
         width: 8px;
         height: 8px;
@@ -256,7 +254,6 @@
         color: #e2e8f0;
     }
 
-    /* Bandwidth specific styles */
     .bandwidth-meter {
         height: 10px;
         border-radius: 5px;
@@ -395,7 +392,6 @@
         </div>
     </div>
 
-    <!-- Bandwidth Monitoring Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div class="noc-card p-4">
             <h3 class="text-xs font-bold text-slate-400 mb-3 uppercase flex items-center gap-2">
@@ -494,7 +490,6 @@
         </div>
     </div>
 
-    <!-- Network Interfaces Details -->
     <div class="noc-card mb-4">
         <div class="p-3 border-b border-slate-800 bg-slate-900/50 rounded-t-lg">
             <h3 class="text-xs font-bold text-slate-300 flex items-center gap-2">
@@ -559,7 +554,6 @@
 
 </div>
 
-<!-- Ticker Footer -->
 <div class="ticker-wrap">
     <div class="ticker-track">
         @php
@@ -594,12 +588,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    // Pass network data from controller to JavaScript
+
     const networkData = @json($networkStats['interfaces'] ?? []);
     const bandwidthData = @json($bandwidthUsage ?? []);
     const isMockData = @json($networkStats['is_mock'] ?? false);
 
-    // Clock Logic
     function updateClock() {
         const now = new Date();
         const timeString = now.toLocaleTimeString('id-ID', { 
@@ -613,7 +606,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Auto-refresh network data every 10 seconds
     function refreshNetworkData() {
         fetch('/api/bandwidth/data')
             .then(response => response.json())
@@ -621,31 +613,26 @@
                 if (data.success) {
                     document.getElementById('last-update').textContent = 
                         new Date(data.data.timestamp).toLocaleTimeString();
-                    
-                    // Update bandwidth cards if needed
                     console.log('Network data refreshed:', data.data);
                 }
             })
             .catch(error => console.error('Error refreshing network data:', error));
     }
 
-    // Initial refresh after 2 seconds, then every 10 seconds
     setTimeout(refreshNetworkData, 2000);
     setInterval(refreshNetworkData, 10000);
 
-    // Network Topology
     document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('networkTopology');
         if (!container) return;
 
-        // Define network nodes - use real data if available
         let nodes = [];
         let connections = [];
 
         if (networkData.length > 0) {
-            // Use real interface data
+
             nodes = networkData.map((iface, index) => {
-                // Position nodes in a grid
+
                 const row = Math.floor(index / 4);
                 const col = index % 4;
                 const x = 10 + col * 25;
@@ -658,7 +645,6 @@
                     status = 'warning';
                 }
 
-                // Get icon based on interface type
                 let icon = '🔌';
                 const ifaceName = (iface.interface || '').toLowerCase();
                 if (ifaceName.includes('eth') || ifaceName.includes('enp')) {
@@ -683,7 +669,6 @@
                 };
             });
 
-            // Create connections between nodes
             for (let i = 0; i < Math.min(nodes.length, 5); i++) {
                 for (let j = i + 1; j < Math.min(nodes.length, 5); j++) {
                     if (Math.random() > 0.5) {
@@ -692,7 +677,7 @@
                 }
             }
         } else {
-            // Fallback to simulated nodes
+
             nodes = [
                 { 
                     id: 1, 
@@ -751,7 +736,6 @@
                 }
             ];
 
-            // Simulated connections
             connections = [
                 { from: 1, to: 2 },
                 { from: 2, to: 3 },
@@ -760,14 +744,12 @@
             ];
         }
 
-        // Create nodes
         nodes.forEach(node => {
             const nodeEl = document.createElement('div');
             nodeEl.className = 'node';
             nodeEl.style.left = `${node.x}%`;
             nodeEl.style.top = `${node.y}%`;
-            
-            // Determine colors based on status
+
             let bgColor, borderColor;
             switch(node.status) {
                 case 'online':
@@ -799,8 +781,7 @@
                 </div>
                 <div class="status-badge status-${node.status}"></div>
             `;
-            
-            // Add hover effect
+
             nodeEl.addEventListener('mouseenter', () => {
                 nodeEl.style.transform = 'scale(1.05)';
                 nodeEl.style.zIndex = '100';
@@ -812,8 +793,7 @@
                 nodeEl.style.zIndex = '10';
                 nodeEl.style.boxShadow = `0 0 15px ${borderColor}40`;
             });
-            
-            // Add click event for details
+
             nodeEl.addEventListener('click', () => {
                 alert(`${node.name}\nStatus: ${node.status.toUpperCase()}\nSpeed: ${node.stats}`);
             });
@@ -821,20 +801,16 @@
             container.appendChild(nodeEl);
         });
 
-        // Create connections
         connections.forEach(conn => {
             const fromNode = nodes.find(n => n.id === conn.from);
             const toNode = nodes.find(n => n.id === conn.to);
             
             if (!fromNode || !toNode) return;
-            
-            // Create connection line
             const line = document.createElement('div');
             line.className = 'connection';
             
             const containerWidth = container.offsetWidth;
             const containerHeight = container.offsetHeight;
-            
             const x1 = (fromNode.x / 100) * containerWidth;
             const y1 = (fromNode.y / 100) * containerHeight;
             const x2 = (toNode.x / 100) * containerWidth;
@@ -849,13 +825,10 @@
             line.style.transform = `rotate(${angle}deg)`;
             
             container.appendChild(line);
-            
-            // Create data flow animation
             createDataFlow(line, fromNode, toNode);
         });
 
         function createDataFlow(line, fromNode, toNode) {
-            // Determine flow speed based on node speeds
             const avgSpeed = (fromNode.speed_rx + toNode.speed_tx) / 2;
             const flowCount = Math.min(5, Math.max(1, Math.floor(avgSpeed / 1000000)));
             
@@ -863,7 +836,6 @@
                 const flow = document.createElement('div');
                 flow.className = 'data-flow';
                 
-                // Randomize animation delay and duration
                 const delay = (i / flowCount) * 2;
                 const duration = 3 / (avgSpeed / 1000000 + 0.5);
                 
@@ -877,17 +849,12 @@
             }
         }
 
-        // Update stats periodically
         function updateNetworkStats() {
             const onlineCount = nodes.filter(n => n.status === 'online').length;
             const warningCount = nodes.filter(n => n.status === 'warning').length;
             const criticalCount = nodes.filter(n => n.status === 'critical').length;
-            
-            // Calculate total speed
             const totalSpeed = nodes.reduce((sum, node) => sum + node.speed_rx + node.speed_tx, 0);
             const bandwidth = Math.min(100, Math.round((totalSpeed / 1000000000) * 100));
-            
-            // Update stats display
             const stats = container.querySelector('.network-stats');
             if (stats) {
                 stats.innerHTML = `
@@ -915,12 +882,10 @@
             }
         }
         
-        // Update stats every 5 seconds
         setInterval(updateNetworkStats, 5000);
-        updateNetworkStats(); // Initial call
+        updateNetworkStats();
     });
 
-    // Charts Configuration
     const commonOptions = {
         chart: {
             background: 'transparent',
@@ -943,7 +908,6 @@
         }]
     };
 
-    // Trend Chart
     const trendChart = new ApexCharts(document.querySelector("#trendChart"), {
         ...commonOptions,
         series: [{
@@ -980,7 +944,6 @@
     });
     trendChart.render();
 
-    // Category Chart
     const categoryChart = new ApexCharts(document.querySelector("#categoryChart"), {
         ...commonOptions,
         series: {!! json_encode($categoryData->pluck('total')) !!},

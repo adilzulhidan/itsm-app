@@ -85,19 +85,32 @@
                                     </svg>
                                     Departement
                                 </label>
-                                <select name="department" 
-                                    class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-gray-100 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 appearance-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-                                    required>
-                                    <option value="" class="bg-gray-700 text-gray-100">-- Choice Departemen --</option>
-                                    <option value="IT" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'IT') ? 'selected' : '' }}>IT (Information Technology)</option>
-                                    <option value="Engineering" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'Engineering') ? 'selected' : '' }}>Engineering</option>
-                                    <option value="HRGA" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'HRGA') ? 'selected' : '' }}>HRGA</option>
-                                    <option value="Finance" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'Finance & Accounting') ? 'selected' : '' }}>Finance & Accounting</option>
-                                    <option value="Purchasing/Exim" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'Purchasing/Exim') ? 'selected' : '' }}>Purchasing/Exim</option>
-                                    <option value="Sales" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'Sales') ? 'selected' : '' }}>Sales</option>
-                                    <option value="PPIC" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'PPIC') ? 'selected' : '' }}>PPIC</option>
-                                    <option value="QC" class="bg-gray-700 text-gray-100" {{ (old('department', $user->department ?? '') == 'QC') ? 'selected' : '' }}>QC</option>
-                                </select>
+                              <select name="department" 
+    class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-gray-100 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 appearance-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+    required>
+    <option value="" class="bg-gray-700 text-gray-100">-- Choice Departemen --</option>
+    
+    @php
+        $depts = [
+            'IT' => 'IT (Information Technology)',
+            'Engineering' => 'Engineering',
+            'HRGA' => 'HRGA',
+            'Finance & Accounting' => 'Finance & Accounting', // Pastikan value dan label sama
+            'Purchasing/Exim' => 'Purchasing/Exim',
+            'Sales' => 'Sales Marketing',
+            'PPIC' => 'PPIC',
+            'QC' => 'QC (Quality Control)',
+            'Production' => 'Production'
+        ];
+    @endphp
+
+    @foreach($depts as $value => $label)
+        <option value="{{ $value }}" class="bg-gray-700 text-gray-100" 
+            {{ old('department', $user->department) == $value ? 'selected' : '' }}>
+            {{ $label }}
+        </option>
+    @endforeach
+</select>
                                 <p class="mt-2 text-xs text-gray-400 flex items-center dark:text-gray-400">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>

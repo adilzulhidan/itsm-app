@@ -18,7 +18,6 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-6 gap-6 mb-8">
-    <!-- Total Tickets -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-blue-800 dark:border-blue-600 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -37,7 +36,6 @@
         </div>
     </div>
 
-    <!-- Open Tickets -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-green-500 dark:border-green-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -58,7 +56,7 @@
         </div>
     </div>
 
-    <!-- In Progress -->
+  
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-yellow-500 dark:border-yellow-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -80,8 +78,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- Resolved -->
+   
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-cyan-500 dark:border-cyan-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -98,7 +95,6 @@
         </div>
     </div>
     
-    <!-- Closed -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-gray-500 dark:border-gray-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -121,7 +117,7 @@
         </div>
     </div>
     
-    <!-- Users -->
+    
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-purple-500 dark:border-purple-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center">
             <div>
@@ -139,7 +135,7 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Daily Tickets -->
+    
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-red-500 dark:border-red-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -153,7 +149,7 @@
         <canvas id="dailyChart" height="80"></canvas>
     </div>
 
-    <!-- Weekly Tickets -->
+  
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-indigo-500 dark:border-indigo-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -167,7 +163,7 @@
         <canvas id="weeklyChart" height="80"></canvas>
     </div>
 
-    <!-- Monthly Tickets -->
+   
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-teal-500 dark:border-teal-400 hover:shadow-xl transition duration-300 dark:shadow-gray-900">
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -182,9 +178,8 @@
     </div>
 </div>
 
-<!-- Charts Section -->
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Ticket Trends -->
     <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-900">
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -200,7 +195,7 @@
         <canvas id="lineChart" height="120"></canvas>
     </div>
 
-    <!-- Ticket Distribution -->
+   
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-900">
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -215,9 +210,9 @@
     </div>
 </div>
 
-<!-- Performance Metrics -->
+
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Resolution Rate -->
+
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-900">
         <div class="flex items-center justify-between mb-4">
             <div>
@@ -248,7 +243,7 @@
         </div>
     </div>
 
-    <!-- Rejected Tickets -->
+ 
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg dark:shadow-gray-900">
         <div class="flex items-center justify-between mb-4">
             <div>
@@ -269,7 +264,7 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
+   
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-2xl shadow-xl p-6 text-white">
         <h3 class="text-lg font-bold mb-4">Quick Actions</h3>
         <div class="space-y-3">
@@ -305,7 +300,7 @@
     </div>
 </div>
 
-<!-- System Status -->
+
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 dark:shadow-gray-900">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">System Status</h2>
@@ -368,7 +363,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Auto-refresh functionality
+     
         let refreshInterval = 30000;
         let refreshEnabled = true;
         let refreshTimer;
@@ -388,7 +383,7 @@
                 setTimeout(() => {
                     refreshIcon.style.transform = 'rotate(0deg)';
                     
-                    // Update last updated timestamp
+                   
                     const now = new Date();
                     const lastUpdated = document.getElementById('last-updated');
                     if (lastUpdated) {
@@ -420,10 +415,10 @@
             }
         }
 
-        // Initialize Charts
+        
         const colors = getChartColors();
 
-        // Line Chart
+        
         const lineCtx = document.getElementById('lineChart').getContext('2d');
         const lineChartData = @json($lineChartData);
         
@@ -484,7 +479,7 @@
             }
         });
 
-        // Donut Chart
+        
         const donutCtx = document.getElementById('donutChart').getContext('2d');
         const donutData = @json($donutData);
         
@@ -538,7 +533,7 @@
             }
         });
 
-        // Daily Chart
+       
         const dailyCtx = document.getElementById('dailyChart').getContext('2d');
         const dailyChartData = @json($dailyChartData ?? ['labels' => [], 'data' => []]);
         
@@ -569,7 +564,7 @@
             });
         }
 
-        // Weekly Chart
+      
         const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
         const weeklyChartData = @json($weeklyChartData ?? ['labels' => [], 'data' => []]);
         
@@ -600,7 +595,7 @@
             });
         }
 
-        // Monthly Chart
+        
         const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
         const monthlyChartData = @json($monthlyChartData ?? ['labels' => [], 'data' => []]);
         
@@ -631,7 +626,7 @@
             });
         }
 
-        // Chart type toggle function
+       
         function toggleChartType() {
             if (lineChart.config.type === 'line') {
                 lineChart.config.type = 'bar';
@@ -645,13 +640,13 @@
             lineChart.update();
         }
 
-        // Theme observer
+      
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.attributeName === 'class') {
                     const newColors = getChartColors();
                     
-                    // Update line chart
+                   
                     lineChart.options.scales.x.grid.color = newColors.gridColor;
                     lineChart.options.scales.x.ticks.color = newColors.tickColor;
                     lineChart.options.scales.y.grid.color = newColors.gridColor;
@@ -661,7 +656,7 @@
                     lineChart.options.plugins.tooltip.bodyColor = newColors.textColor;
                     lineChart.update();
                     
-                    // Update donut chart
+                   
                     donutChart.options.plugins.legend.labels.color = newColors.textColor;
                     donutChart.options.plugins.tooltip.backgroundColor = newColors.background;
                     donutChart.options.plugins.tooltip.titleColor = newColors.textColor;
@@ -676,10 +671,10 @@
             attributeFilter: ['class']
         });
 
-        // Start refresh timer
+        
         startRefreshTimer();
 
-        // Make toggleChartType globally available
+        
         window.toggleChartType = toggleChartType;
     });
 </script>

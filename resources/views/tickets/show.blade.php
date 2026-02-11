@@ -337,7 +337,7 @@
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 uppercase font-semibold mb-1">
-                                <i class="fas fa-building mr-1"></i>Departemen
+                                <i class="fas fa-building mr-1"></i>Department
                             </label>
                             <span class="font-medium text-gray-900 bg-gray-100 px-2 py-1 rounded block">{{ $ticket->department ?? '-' }}</span>
                         </div>

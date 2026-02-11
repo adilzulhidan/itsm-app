@@ -83,19 +83,19 @@
                                     <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                     </svg>
-                                    Departement
+                                    Department
                                 </label>
                               <select name="department" 
     class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-gray-100 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 appearance-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
     required>
-    <option value="" class="bg-gray-700 text-gray-100">-- Choice Departemen --</option>
+    <option value="" class="bg-gray-700 text-gray-100">-- Choice Department --</option>
     
     @php
         $depts = [
             'IT' => 'IT (Information Technology)',
             'Engineering' => 'Engineering',
             'HRGA' => 'HRGA',
-            'Finance & Accounting' => 'Finance & Accounting', // Pastikan value dan label sama
+            'Finance & Accounting' => 'Finance & Accounting',
             'Purchasing/Exim' => 'Purchasing/Exim',
             'Sales' => 'Sales Marketing',
             'PPIC' => 'PPIC',

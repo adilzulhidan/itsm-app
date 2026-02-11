@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         if ($user->role !== 'admin' && $user->role !== 'it_head') {
-            return redirect()->route('tickets.index')->with('error', 'Akses Ditolak!');
+            return redirect()->route('tickets.index');
         }
 
     

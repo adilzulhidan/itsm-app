@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Ticket; // Import Model Ticket
+use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -13,7 +13,7 @@ class ManagerApprovalNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $ticket; // Variable publik agar bisa dibaca di View
+    public $ticket;
 
     public function __construct(Ticket $ticket)
     {
@@ -29,7 +29,7 @@ class ManagerApprovalNotification extends Mailable
 
     public function content(): Content
     {
-        // Pastikan view ini dibuat (lihat langkah 3)
+        
         return new Content(
             view: 'emails.manager_approval', 
         );

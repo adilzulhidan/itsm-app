@@ -1,39 +1,60 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Request Form - PT. JTEKT INDONESIA</title>
+    <title>IT Request Form (Admin Mode) - PT. JTEKT INDONESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Style tambahan agar terlihat seperti kertas dokumen */
-        body { background-color: #f3f4f6; }
+        /* Style Dokumen Kertas (Sama dengan User) */
+        body { background-color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .document-container {
             background: white;
-            padding: 30px;
+            padding: 40px;
             border: 1px solid #d1d5db;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
+            max-width: 900px; /* Sedikit lebih lebar untuk admin */
             margin: 40px auto;
+            position: relative;
+            border-top: 5px solid #1e40af; /* Pembeda Visual untuk Admin (Garis Biru Atas) */
         }
-        .header-line { border-bottom: 2px solid black; margin-bottom: 20px; }
-        .form-label { font-weight: bold; color: #374151; display: block; margin-bottom: 5px; }
-        .form-input { width: 100%; border: 1px solid #9ca3af; padding: 8px 12px; }
-        .auth-table th, .auth-table td { border: 1px solid black; padding: 10px; text-align: center; }
-        .auth-table th { background-color: #e5e7eb; }
-        .auth-box { height: 80px; vertical-align: bottom; color: #9ca3af; font-style: italic; }
+        .header-line { border-bottom: 2px solid #333; margin-bottom: 25px; padding-bottom: 15px; }
+        .form-label { font-weight: 600; color: #374151; display: block; margin-bottom: 6px; font-size: 0.95rem; }
+        .form-input { 
+            width: 100%; 
+            border: 1px solid #9ca3af; 
+            padding: 8px 12px; 
+            border-radius: 4px;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: #2563eb; outline: none; ring: 2px solid #bfdbfe; }
+        
+        .radio-group label { display: flex; align-items: center; margin-bottom: 8px; cursor: pointer; }
+        .radio-group input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+        
+        /* Badge Admin */
+        .admin-badge {
+            background-color: #1e40af; color: white; padding: 5px 10px; 
+            font-size: 0.7rem; font-weight: bold; border-radius: 4px; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-white shadow-sm py-4 px-6 mb-4">
-        <a href="{{ route('tickets.index') }}" class="text-blue-600 hover:underline">&larr; Kembali ke Daftar Tiket</a>
+    <div class="bg-white shadow-sm py-3 px-6 mb-4 border-b border-gray-200">
+        <div class="max-w-[900px] mx-auto">
+            <a href="{{ route('tickets.index') }}" class="text-blue-700 hover:text-blue-900 font-medium flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+            </a>
+        </div>
     </div>
 
-    @if (session('success'))
-        <div class="max-w-3xl mx-auto bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-            {{ session('success') }}
+    @if ($errors->any())
+        <div class="max-w-[900px] mx-auto bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 shadow-sm">
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+            </ul>
         </div>
     @endif
 
@@ -41,129 +62,158 @@
         <form action="{{ route('tickets.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <div class="flex justify-between items-end header-line pb-4">
+            <div class="flex justify-between items-end header-line">
                 <div class="flex items-center">
-                    <img src="{{ asset('images/logo-jtekt.png') }}" alt="JTEKT Logo" class="h-12 mr-4">
-                    
+                    <img src="{{ asset('images/logo-jtekt.png') }}" alt="JTEKT Logo" class="h-10 mr-4 grayscale opacity-80">
                 </div>
-                <div class="text-center flex-grow self-center">
-                    <h2 class="text-2xl font-bold underline uppercase">IT REQUEST FORM</h2>
+                <div class="text-center flex-grow self-center px-4">
+                    <h2 class="text-2xl font-bold uppercase tracking-wide text-gray-800" style="text-decoration: underline; text-decoration-thickness: 2px;">
+                        IT REQUEST FORM
+                    </h2>
+                    <span class="admin-badge">INTERNAL IT INPUT</span>
                 </div>
-                <div class="text-right">
-                    <p class="font-bold">Date : <span class="font-normal border-b border-black px-2">{{ date('d M Y') }}</span></p>
+                <div class="text-right text-sm">
+                    <p class="font-bold text-gray-600">Date</p>
+                    <p class="border-b border-black min-w-[120px] text-center pb-1">{{ date('d M Y') }}</p>
                 </div>
             </div>
 
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-6">
                 
-                <div class="space-y-4">
-                    <div>
-                        <label class="form-label">Requester Name :</label>
-                        <input type="text" value="{{ Auth::user()->name }}" readonly class="w-full bg-gray-100 border-b border-black px-2 py-1 outline-none cursor-not-allowed font-bold">
+                <div class="md:col-span-7 space-y-5">
+                    
+                    <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                        <label class="form-label text-blue-800"><i class="fas fa-user-tag mr-1"></i> Create For (Requester) :</label>
+                        <select name="created_for_user" class="form-input bg-white border-blue-300 focus:ring-blue-500" required>
+                            <option value="{{ Auth::id() }}">-- Diri Sendiri ({{ Auth::user()->name }}) --</option>
+                            @foreach($users as $u)
+                                <option value="{{ $u->id }}">{{ $u->name }} - {{ $u->department }}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-[10px] text-blue-600 mt-1">*Pilih user jika Anda menginput tiket atas nama orang lain.</p>
                     </div>
 
                     <div>
-                        <label class="form-label">Department : <span class="text-red-500">*</span></label>
-                        <select name="department" class="form-input bg-white" required>
-                            <option value="">-- Select Department --</option>
-                            <option value="HRD/GA">HRD / GA</option>
-                            <option value="Finance/Accounting">Finance / Accounting</option>
+                        <label class="form-label">Target Department (Override) :</label>
+                        <select name="department" class="form-input bg-white">
+                            <option value="">-- Auto (Sesuai User) --</option>
+                            <option value="HRGA">HRGA</option>
+                            <option value="Finance & Accounting">Finance & Accounting</option>
                             <option value="Production">Production</option>
                             <option value="Engineering">Engineering</option>
-                            <option value="PPIC/Logistics">PPIC / Logistics</option>
-                            <option value="Quality">Quality</option>
-                            <option value="Purchasing/exim">Purchasing/Exim</option>
+                            <option value="PPIC">PPIC</option>
+                            <option value="QC">QC</option>
+                            <option value="Purchasing/Exim">Purchasing/Exim</option>
                             <option value="Sales">Sales</option>
+                            <option value="IT">IT</option>
                         </select>
                     </div>
+
+                    <div>
+                        <label class="form-label">Subject / Title : <span class="text-red-500">*</span></label>
+                        <select name="subject" class="form-input bg-white cursor-pointer" required>
+                            <option value="">-- Pilih Masalah / Request --</option>
+                            
+                            <optgroup label="Hardware / Perangkat">
+                                <option value="Permintaan Mouse Baru">Permintaan Mouse Baru</option>
+                                <option value="Permintaan Keyboard Baru">Permintaan Keyboard Baru</option>
+                                <option value="Monitor Mati / Rusak">Monitor Mati / Rusak</option>
+                                <option value="PC / Laptop Lambat">PC / Laptop Lambat</option>
+                                <option value="Printer Macet / Error">Printer Macet / Error</option>
+                            </optgroup>
+
+                            <optgroup label="Software & Akun">
+                                <option value="Install Ulang Windows/Office">Install Ulang Windows/Office</option>
+                                <option value="Install Software Baru">Install Software Baru</option>
+                                <option value="Permintaan Akun Email Baru">Permintaan Akun Email Baru</option>
+                                <option value="Lupa Password / Reset">Lupa Password / Reset</option>
+                                <option value="Error Aplikasi ERP/SAP">Error Aplikasi ERP/SAP</option>
+                            </optgroup>
+
+                            <optgroup label="Network / Jaringan">
+                                <option value="Wifi Tidak Konek">Wifi Tidak Konek</option>
+                                <option value="Kabel LAN Putus/Rusak">Kabel LAN Putus/Rusak</option>
+                                <option value="Internet Lambat">Internet Lambat</option>
+                            </optgroup>
+                            
+                            <optgroup label="Lainnya">
+                                <option value="Peminjaman Proyektor">Peminjaman Proyektor</option>
+                                <option value="Maintenance Rutin">Maintenance Rutin (IT Internal)</option>
+                                <option value="Other Request">Lainnya</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="form-label">Source :</label>
+                            <select name="source" class="form-input bg-white">
+                                <option value="Web System">Web System</option>
+                                <option value="Email">Email</option>
+                                <option value="Phone Call">Phone Call</option>
+                                <option value="Direct/Walk-in">Direct / Walk-in</option>
+                                <option value="WhatsApp">WhatsApp</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Initial Priority :</label>
+                            <select name="priority" class="form-input bg-white font-bold text-gray-700">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high" class="text-red-600">High</option>
+                                <option value="critical" class="text-red-800 bg-red-100">CRITICAL</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="border border-gray-400 p-4 bg-gray-50">
-                    <label class="form-label mb-3">Request Type : <span class="text-red-500">*</span></label>
-                    <div class="space-y-2 pl-2">
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="Technical Support" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>Technical Support</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="New Device" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>New Device</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="Others" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>Others</span>
-                        </label>
-                        <label class="form-label mb-3">Request Source : <span class="text-red-500">*</span></label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="Email" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>Email</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="By Phone" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>By Phone</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer">
-                            <input type="radio" name="category" value="In Person" class="form-radio h-4 w-4 text-blue-600 mr-2">
-                            <span>In Person</span>
-                        </label>
+                <div class="md:col-span-5">
+                    <div class="border border-gray-400 p-5 bg-gray-50 h-full rounded shadow-sm">
+                        <label class="form-label mb-3 text-lg border-b border-gray-300 pb-2">Category : <span class="text-red-500">*</span></label>
+                        <div class="radio-group pl-1 text-sm text-gray-700">
+                            
+                            <label><input type="radio" name="category" value="Hardware" required> <span>Hardware</span></label>
+                            <label><input type="radio" name="category" value="Software"> <span>Software</span></label>
+                            <label><input type="radio" name="category" value="Network"> <span>Network</span></label>
+                            <label><input type="radio" name="category" value="Printer"> <span>Printer & Scanner</span></label>
+                            <label><input type="radio" name="category" value="Account"> <span>Account & Email</span></label>
+                            <label><input type="radio" name="category" value="Other"> <span>Other Request</span></label>
+
+                        </div>
+
+                        <div class="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-800">
+                            <strong>Note:</strong> Tiket yang dibuat oleh Admin/IT Head akan otomatis melewati proses approval Manager User dan langsung masuk status <u>In Progress</u> atau <u>Approved</u>.
+                        </div>
                     </div>
                 </div>
             </div>
 
-
             <div class="mb-6">
-                <label class="form-label">Description / Details of Request : <span class="text-red-500">*</span></label>
-                <textarea name="description" rows="6" class="form-input" placeholder="Please describe your request or problem details here..." required></textarea>
+                <label class="form-label">Description / Technical Details : <span class="text-red-500">*</span></label>
+                <textarea name="description" rows="5" class="form-input" 
+                          placeholder="Jelaskan detail masalah atau instruksi pengerjaan..." required></textarea>
             </div>
 
-            <div class="mb-8">
-                <label class="form-label">Attachment (Optional) :</label>
-                <input type="file" name="attachment" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"/>
-                <p class="text-xs text-gray-500 mt-1">Supported: JPG, PNG, PDF. Max 2MB.</p>
+            <div class="mb-8 p-4 border border-dashed border-gray-400 rounded bg-gray-50">
+                <label class="form-label mb-2">Attachment (Optional) :</label>
+                <input type="file" name="attachment" class="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                    file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100 cursor-pointer" />
             </div>
 
-
-            <div class="mt-12">
-                <h3 class="font-bold mb-2">Authorization</h3>
-                <table class="w-full auth-table border-collapse">
-                    <thead>
-                        <tr>
-                            <th style="width: 33%;">Requester</th>
-                            <th style="width: 33%;">Function Head (Approved By)</th>
-                            <th style="width: 33%;">IT Dept Head (Processed By)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="auth-box bg-gray-50">
-                                <span class="font-bold text-black">{{ Auth::user()->name }}</span><br>
-                                <span class="text-xs">(Signed Digitally)</span>
-                            </td>
-                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
-                            <td class="auth-box">_________________________<br><span class="text-xs">(Signed Digitally)</span></td>
-                        </tr>
-                        <tr>
-                             <td class="text-xs text-left border-t-0">Date: {{ date('d/m/Y') }}</td>
-                             <td class="text-xs text-left border-t-0">Date:</td>
-                             <td class="text-xs text-left border-t-0">Date:</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-8 flex justify-end items-center gap-4">
-                <button type="reset" class="text-gray-600 hover:text-gray-800 px-4 py-2">Reset Form</button>
-                <button type="submit" class="bg-blue-800 text-white font-bold py-3 px-8 shadow-md hover:bg-blue-900 transition">
-                    SUBMIT IT REQUEST
+            <div class="mt-8 flex justify-end items-center gap-4 pt-6 border-t border-gray-200">
+                <button type="reset" class="text-gray-600 hover:text-red-600 px-4 py-2 font-medium transition text-sm">Reset</button>
+                <button type="submit" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-8 shadow-md rounded flex items-center gap-2 transition transform hover:scale-105">
+                    <i class="fas fa-paper-plane"></i> CREATE TICKET
                 </button>
             </div>
 
         </form>
     </div>
 
-    <div class="max-w-[900px] mx-auto text-right text-xs text-gray-500 mt-2 font-mono">
-        No. Dokumen: FR-IT-GNP-011-00 | Revisi: 00
+    <div class="max-w-[900px] mx-auto text-right text-[10px] text-gray-400 mt-2 font-mono mb-10">
+        JTEKT ITSM System v1.0 | Mode: Administrator Input
     </div>
 
 </body>

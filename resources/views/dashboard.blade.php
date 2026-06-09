@@ -30,7 +30,7 @@
         </div>
         <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
             @php
-                $growth = $totalTickets > 0 ? 12 : 0; // Example growth percentage
+                $growth = $totalTickets > 0 ? 12 : 0;
             @endphp
             <span class="text-green-600 dark:text-green-400">↑ {{ $growth }}%</span> from last month
         </div>
@@ -265,7 +265,7 @@
     </div>
 
    
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-2xl shadow-xl p-6 text-white">
+    <div class="bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-2xl shadow-xl p-6 text-white">
         <h3 class="text-lg font-bold mb-4">Quick Actions</h3>
         <div class="space-y-3">
             @if(Auth::user()->role == 'admin' || Auth::user()->role == 'it_head')

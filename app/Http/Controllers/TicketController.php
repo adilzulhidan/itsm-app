@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage; // Ditambahkan untuk hapus file
 use Barryvdh\DomPDF\Facade\Pdf; 
 use Illuminate\Support\Str; 
 use App\Mail\ManagerApprovalNotification; 
@@ -16,19 +17,18 @@ use App\Mail\TicketRejectedNotification;
 
 class TicketController extends Controller
 {
-    
     public function index(Request $request)
     {
         $user = Auth::user();
+        $userRole = strtolower($user->role);
         $query = Ticket::query();
 
-        if ($user->role == 'admin' || $user->role == 'it_head') {
-            // Admin melihat semua tiket
+        if (in_array($userRole, ['admin', 'it_head'])) {
+            // Admin dan IT Head melihat semua tiket
         } 
-        elseif ($user->role == 'manager') {
+        elseif ($userRole == 'manager') {
             $query->where(function($q) use ($user) {
                 $q->where('user_id', $user->id)
-                  // Gunakan ILIKE (Postgres specific) atau LOWER untuk case-insensitive
                   ->orWhereRaw('LOWER(department) = ?', [strtolower($user->department)]);
             });
         }
@@ -56,27 +56,22 @@ class TicketController extends Controller
         return view('tickets.index', compact('tickets'));
     }
     
-    // --- FUNGSI CREATE (SUDAH DIGABUNG) ---
     public function create()
     {
-        $user = Auth::user();
+        $userRole = strtolower(Auth::user()->role);
 
-        // Jika Admin atau IT Head, arahkan ke form khusus Admin
-        if (in_array($user->role, ['admin', 'it_head'])) {
-            // Ambil semua user untuk dropdown "Requester"
+        if (in_array($userRole, ['admin', 'it_head'])) {
             $users = User::orderBy('name', 'asc')->get();
             return view('tickets.create_admin', compact('users')); 
         }
 
-        // Jika user biasa, arahkan ke form biasa
         return view('tickets.create');
     }
 
-    // --- FUNGSI STORE (SUDAH DIUPDATE UNTUK ADMIN & DROPDOWN SUBJECT) ---
     public function store(Request $request)
     {
         $request->validate([
-            'subject'     => 'required|string|max:255', // Validasi Subject Baru
+            'subject'     => 'required|string|max:255',
             'category'    => 'required', 
             'description' => 'required',
             'attachment'  => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048', 
@@ -89,32 +84,26 @@ class TicketController extends Controller
     
         $ticketCode = 'IT-' . date('Ymd') . '-' . strtoupper(Str::random(5));
         
-        // --- LOGIKA PENENTUAN USER & DEPARTEMEN ---
         $userId = Auth::id();
+        $userRole = strtolower(Auth::user()->role);
         $dept   = $request->filled('department') ? $request->department : Auth::user()->department;
         $source = $request->filled('source') ? $request->source : 'Web System';
         $priority = 'medium';
 
-        // Jika Admin membuat tiket untuk orang lain
-        if (in_array(Auth::user()->role, ['admin', 'it_head'])) {
-            
+        if (in_array($userRole, ['admin', 'it_head'])) {
             if ($request->filled('created_for_user')) {
                 $targetUser = User::find($request->created_for_user);
                 if ($targetUser) {
                     $userId = $targetUser->id;
-                    $dept   = $targetUser->department; // Gunakan departemen si user asli
+                    $dept   = $targetUser->department; 
                 }
             }
-            
             if ($request->filled('priority')) {
                 $priority = $request->priority;
             }
         }
 
-        // --- LOGIKA STATUS AWAL ---
-        $userRole = Auth::user()->role;
         $initialStatus = 'Menunggu Persetujuan Manager';
-        
         $mgrId = null; 
         $mgrAt = null;
         $itId  = null;
@@ -125,22 +114,18 @@ class TicketController extends Controller
             $mgrId = Auth::id();
             $mgrAt = now();
         }
-        // Jika Admin/IT Head yg buat, otomatis Bypass approval Manager
-        elseif ($userRole == 'admin' || $userRole == 'it_head') {
-            $initialStatus = 'In Progress'; // Langsung dikerjakan
-            $mgrId = Auth::id(); // Auto approve by admin as manager replacement
+       elseif (in_array($userRole, ['admin', 'it_head'])) {
+            $initialStatus = 'In Progress'; 
+            $mgrId = Auth::id(); 
             $mgrAt = now();
-            
-            if ($userRole == 'it_head') {
-                $itId = Auth::id();
-                $itAt = now();
-            }
+            $itId = Auth::id();
+            $itAt = now();
         }
     
         $ticket = Ticket::create([ 
             'user_id'              => $userId,
             'ticket_code'          => $ticketCode,
-            'subject'              => $request->subject, // Subject murni dari inputan (Dropdown)
+            'subject'              => $request->subject, 
             'department'           => $dept,
             'source'               => $source,
             'category'             => $request->category,
@@ -154,31 +139,30 @@ class TicketController extends Controller
             'it_approved_at'         => $itAt,
         ]);
         
-        // Kirim Notifikasi Email (Hanya jika status butuh approval)
         try {
             if ($initialStatus == 'Menunggu Persetujuan Manager') {
-                $manager = User::where('role', 'manager')->where('department', $dept)->first();
+                $manager = User::whereRaw('LOWER(role) = ?', ['manager'])->where('department', $dept)->first();
                 if ($manager) Mail::to($manager->email)->send(new ManagerApprovalNotification($ticket));
             } 
             elseif ($initialStatus == 'Menunggu Persetujuan IT Head' && $userRole != 'admin') {
-                $itHead = User::where('role', 'it_head')->first();
+                $itHead = User::whereRaw('LOWER(role) = ?', ['it_head'])->first();
                 if ($itHead) Mail::to($itHead->email)->send(new ITHeadApprovalNotification($ticket));
             }
         } catch (\Exception $e) {
             \Log::error("Email Error: " . $e->getMessage());
         }
     
-        return redirect()->route('tickets.index')
-                         ->with('success', 'Tiket berhasil dibuat! Kode: ' . $ticketCode);
+        return redirect()->route('tickets.index')->with('success', 'Tiket berhasil dibuat! Kode: ' . $ticketCode);
     }
     
     public function show(Ticket $ticket)
     {
         $user = Auth::user();
+        $userRole = strtolower($user->role);
         $isAuthorized = false;
 
-        if (in_array($user->role, ['admin', 'it_head'])) $isAuthorized = true;
-        elseif ($user->role == 'manager' && ($ticket->user_id == $user->id || $ticket->department == $user->department)) $isAuthorized = true;
+        if (in_array($userRole, ['admin', 'it_head'])) $isAuthorized = true;
+        elseif ($userRole == 'manager' && ($ticket->user_id == $user->id || $ticket->department == $user->department)) $isAuthorized = true;
         elseif ($ticket->user_id == $user->id) $isAuthorized = true;
 
         if (!$isAuthorized) abort(403, 'Unauthorized access');
@@ -189,8 +173,9 @@ class TicketController extends Controller
     public function edit(Ticket $ticket)
     {
         $user = Auth::user();
+        $userRole = strtolower($user->role);
 
-        if (in_array($user->role, ['admin', 'it_head'])) {
+        if (in_array($userRole, ['admin', 'it_head'])) {
             return view('tickets.edit', compact('ticket'));
         }
 
@@ -198,7 +183,7 @@ class TicketController extends Controller
             return view('tickets.edit', compact('ticket'));
         }
 
-        if ($user->role == 'manager' && $user->department == $ticket->department) {
+        if ($userRole == 'manager' && $user->department == $ticket->department) {
              return view('tickets.edit', compact('ticket'));
         }
 
@@ -207,6 +192,8 @@ class TicketController extends Controller
 
     public function update(Request $request, Ticket $ticket)
     {
+        $userRole = strtolower(Auth::user()->role);
+        
         $request->validate([
             'category'    => 'required',
             'description' => 'required',
@@ -215,13 +202,16 @@ class TicketController extends Controller
         ]);
     
         $dataUpdate = [
-            'department'  => (Auth::user()->role == 'admin') ? $request->department : $ticket->department,
+            'department'  => ($userRole == 'admin') ? $request->department : $ticket->department,
             'category'    => $request->category,
             'description' => $request->description,
         ];
     
-        if (in_array(Auth::user()->role, ['admin', 'it_head', 'technician'])) { 
+        if (in_array($userRole, ['admin', 'it_head', 'technician'])) { 
             if ($request->filled('status')) {
+                if ($request->status == 'In Progress' && is_null($ticket->approved_by_it_id)) {
+                    return redirect()->back()->with('error', 'Gagal! Status tidak dapat diubah ke In Progress karena tiket belum disetujui oleh IT Head.');
+                }
                 $dataUpdate['status'] = $request->status;
             }
             if ($request->filled('priority')) {
@@ -234,19 +224,36 @@ class TicketController extends Controller
         return redirect()->route('tickets.show', $ticket->id)->with('success', 'Tiket diperbarui!');
     }
 
+    // FUNGSI HAPUS TIKET SUDAH DITINGKATKAN (DEEP DELETE)
     public function destroy(Ticket $ticket)
     {
-        if (Auth::user()->role !== 'admin') {
+        $userRole = strtolower(Auth::user()->role);
+        
+        if ($userRole !== 'admin') {
             return back()->with('error', 'Hanya Admin yang bisa menghapus tiket.');
         }
-        $ticket->delete();
-        return redirect()->route('tickets.index')->with('success', 'Tiket dihapus.');
+
+        // 1. Hapus file lampiran fisik dari storage server jika ada
+        if ($ticket->attachment && Storage::disk('public')->exists($ticket->attachment)) {
+            Storage::disk('public')->delete($ticket->attachment);
+        }
+
+        // 2. Hapus komentar terkait untuk mencegah Foreign Key Error di PostgreSQL
+        $ticket->comments()->delete();
+
+        // 3. Hapus paksa tiket dari database
+        if (method_exists($ticket, 'forceDelete')) {
+            $ticket->forceDelete(); // Jika pakai SoftDeletes
+        } else {
+            $ticket->delete(); // Jika tidak pakai SoftDeletes
+        }
+
+        return redirect()->route('tickets.index')->with('success', 'Tiket dan seluruh data terkait berhasil dihapus secara permanen.');
     }
 
     public function approveManager(Request $request, Ticket $ticket) 
     {
-        if (Auth::user()->role != 'manager') return back()->with('error', 'Akses Ditolak');
-        
+        if (strtolower(Auth::user()->role) != 'manager') return back()->with('error', 'Akses Ditolak');
         if (Auth::user()->department != $ticket->department) return back()->with('error', 'Bukan departemen Anda.');
 
         $ticket->update([
@@ -256,7 +263,7 @@ class TicketController extends Controller
         ]);
         
         try {
-            $itHead = User::where('role', 'it_head')->first(); 
+            $itHead = User::whereRaw('LOWER(role) = ?', ['it_head'])->first(); 
             if ($itHead) Mail::to($itHead->email)->send(new ITHeadApprovalNotification($ticket));
         } catch (\Exception $e) {}
 
@@ -265,7 +272,11 @@ class TicketController extends Controller
 
     public function approveIt(Ticket $ticket)
     {
-        if (!in_array(Auth::user()->role, ['it_head', 'admin'])) return back()->with('error', 'Akses Ditolak');
+        $userRole = strtolower(Auth::user()->role);
+        
+        if (!in_array($userRole, ['it_head', 'admin'])) {
+            return back()->with('error', 'Akses Ditolak. Hanya IT Head atau Admin yang berwenang.');
+        }
 
         $ticket->update([
             'approved_by_it_id' => Auth::id(),
@@ -277,7 +288,7 @@ class TicketController extends Controller
             Mail::to($ticket->user->email)->send(new TicketApprovedNotification($ticket));
         } catch (\Exception $e) {}
 
-        return back()->with('success', 'Disetujui IT Head. Tiket diproses.');
+        return back()->with('success', 'Disetujui IT Head. Tiket mulai diproses.');
     }
     
     public function rejectTicket(Request $request, Ticket $ticket)
@@ -285,7 +296,11 @@ class TicketController extends Controller
         $request->validate(['rejection_reason' => 'required|string|max:500']);
         
         $user = Auth::user();
-        $rejectedBy = ($user->role === 'manager') ? 'Manager' : 'IT Head';
+        $userRole = strtolower($user->role);
+        
+        $rejectedBy = 'System';
+        if ($userRole === 'manager') $rejectedBy = 'Manager';
+        elseif (in_array($userRole, ['it_head', 'admin'])) $rejectedBy = 'IT Head';
 
         $ticket->update([
             'status' => 'Rejected',
@@ -298,7 +313,7 @@ class TicketController extends Controller
             Mail::to($ticket->user->email)->send(new TicketRejectedNotification($ticket, $request->rejection_reason, $rejectedBy));
         } catch (\Exception $e) {}
 
-        return redirect()->route('tickets.show', $ticket->id)->with('error', 'Tiket ditolak.');
+        return redirect()->route('tickets.show', $ticket->id)->with('success', 'Tiket berhasil ditolak.');
     }
 
     public function printTicket(Ticket $ticket)
@@ -310,15 +325,16 @@ class TicketController extends Controller
     public function exportPdf()
     {
         $user = Auth::user();
+        $userRole = strtolower($user->role);
         $query = Ticket::query();
 
-        if ($user->role == 'manager') {
+        if ($userRole == 'manager') {
             $query->where(function($q) use ($user) {
                 $q->where('user_id', $user->id)
                   ->orWhere('department', $user->department);
             });
         } 
-        elseif ($user->role != 'admin' && $user->role != 'it_head') {
+        elseif (!in_array($userRole, ['admin', 'it_head'])) {
             $query->where('user_id', $user->id);
         }
         
